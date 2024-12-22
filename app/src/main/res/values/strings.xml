@@ -2,4 +2,31 @@
     <string name="app_name">SecretSantaAI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
+    <string name="register_now">Register Now !</string>
+    <string name="gift_box_description">Gift box illustration</string>
+    <!-- General UI Strings -->
+
+
+    <!-- Register Screen -->
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="login_now">Login now</string>
+
+    <!-- Error Messages -->
+    <string name="error_username_empty">Username cannot be empty</string>
+    <string name="error_email_empty">Email cannot be empty</string>
+    <string name="error_password_empty">Password cannot be empty</string>
+    <string name="error_passwords_mismatch">Passwords do not match</string>
+
+    <!-- Success Messages -->
+    <string name="register_success">Registration successful!</string>
+
+
+
 </resources>

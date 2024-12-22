@@ -32,9 +32,9 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnRegister.setOnClickListener {
-            val email = binding.etEmail.text.toString().trim()
-            val password = binding.etPassword.text.toString().trim()
+        binding.registerButton.setOnClickListener {
+            val email = binding.registerEmailEditText.text.toString().trim()
+            val password = binding.registerPasswordEditText.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 registerViewModel.register(email, password)

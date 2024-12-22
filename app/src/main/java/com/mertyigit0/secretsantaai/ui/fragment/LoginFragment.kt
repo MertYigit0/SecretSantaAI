@@ -20,14 +20,17 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginBinding.bind(view)
 
-        binding.btnLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
+        binding.loginButton.setOnClickListener {
+            val email = binding.loginEmailEditText.text.toString()
+            val password = binding.editTextPassword.text.toString()
             loginViewModel.loginUser(email, password)
         }
 
         // Sign up tıklama işlemi
-        binding.tvSignup.setOnClickListener {
+        binding.registerText.setOnClickListener {
+            navigateToSignUp()
+        }
+        binding.registerNowText.setOnClickListener {
             navigateToSignUp()
         }
 
