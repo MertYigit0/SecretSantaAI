@@ -8,14 +8,28 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) {
+
     fun registerUser(email: String, password: String): LiveData<Result<Boolean>> {
         val result = MutableLiveData<Result<Boolean>>()
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    result.value = Result.success(true)
+                result.value = if (task.isSuccessful) {
+                    Result.success(true)
                 } else {
-                    result.value = Result.failure(task.exception ?: Exception("Unknown error"))
+                    Result.failure(task.exception ?: Exception("Registration failed"))
+                }
+            }
+        return result
+    }
+
+    fun loginUser(email: String, password: String): LiveData<Result<Boolean>> {
+        val result = MutableLiveData<Result<Boolean>>()
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                result.value = if (task.isSuccessful) {
+                    Result.success(true)
+                } else {
+                    Result.failure(task.exception ?: Exception("Login failed"))
                 }
             }
         return result
