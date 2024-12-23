@@ -4,24 +4,25 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var auth: FirebaseAuth
+
+    // FirebaseAuth nesnesi Dagger Hilt ile enjekte edildi
+    @Inject lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginBinding.bind(view)
-
-        // Firebase Auth instance
-        auth = FirebaseAuth.getInstance()
 
         // Kullanıcı oturum kontrolü
         checkUserSession()
@@ -38,6 +39,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         binding.registerText.setOnClickListener {
             navigateToSignUp()
         }
+
         binding.registerNowText.setOnClickListener {
             navigateToSignUp()
         }

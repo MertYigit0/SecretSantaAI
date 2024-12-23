@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.mertyigit0.secretsantaai.R
 
 
-class HomeFragment : Fragment() {
+class AiHelpFragment : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_ai_help, container, false)
     }
 
 

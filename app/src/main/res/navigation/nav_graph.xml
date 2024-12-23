@@ -34,4 +34,21 @@
         android:name="com.mertyigit0.secretsantaai.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/aiHelpFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.AiHelpFragment"
+        android:label="AI Help" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.SettingFragment"
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/joinGroupFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.JoinGroupFragment"
+        android:label="Join Group" />
+    <fragment
+        android:id="@+id/aiFavoritesFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.AiFavoritesFragment"
+        android:label="Favorites" />
 </navigation>
