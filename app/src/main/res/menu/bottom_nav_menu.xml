@@ -3,21 +3,24 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/baseline_home_24"
-        android:title="Home" />
+        android:title="@string/home" />
+
+
     <item
-        android:id="@+id/joinGroupFragment"
-        android:icon="@drawable/baseline_group_add_24"
-        android:title="Join Group" />
+        android:id="@+id/aiFavoritesFragment"
+        android:icon="@drawable/baseline_card_giftcard_24"
+        android:title="@string/favorites" />
+
     <item
         android:id="@+id/aiHelpFragment"
         android:icon="@drawable/baseline_auto_awesome_24"
-        android:title="AI Help" />
+        android:title="@string/ai_help" />
     <item
-        android:id="@+id/aiFavoritesFragment"
-        android:icon="@drawable/baseline_favorite_24"
-        android:title="Favorites" />
+        android:id="@+id/joinGroupFragment"
+        android:icon="@drawable/baseline_group_add_24"
+        android:title="@string/join_group" />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/baseline_settings_24"
-        android:title="Settings" />
+        android:title="@string/settings" />
 </menu>

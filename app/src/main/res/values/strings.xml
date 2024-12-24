@@ -26,6 +26,13 @@
 
     <!-- Success Messages -->
     <string name="register_success">Registration successful!</string>
+    <string name="join_group">Join Group</string>
+    <string name="home">Home</string>
+    <string name="ai_help">AI Help</string>
+    <string name="favorites">Favorites</string>
+    <string name="settings">Settings</string>
+    <string name="create_new_group">Create New Group</string>
+    <string name="create">Create</string>
 
 
 </resources>
