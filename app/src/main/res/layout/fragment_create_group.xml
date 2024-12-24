@@ -12,7 +12,8 @@
         android:id="@+id/textViewLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEW GROUP"
+        android:text="@string/new_group"
+        android:textStyle="bold"
         android:layout_gravity="center"
         android:textSize="@dimen/text_size_xlarge"
         android:layout_marginBottom="8dp"/>
@@ -100,7 +101,17 @@
         android:id="@+id/buttonCreateGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Group"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/primary_yellow"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_large"
+        android:text="@string/create_group"
+        android:drawableLeft="@drawable/plus"
+        android:drawablePadding="16dp"
+        android:defaultFocusHighlightEnabled="true"
+        android:gravity="center"
+        android:drawableTint="@color/black" />
+
 
 </LinearLayout>

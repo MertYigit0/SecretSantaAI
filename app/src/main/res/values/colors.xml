@@ -26,6 +26,16 @@
         <color name="gray">#666666</color>
         <color name="tgray">#959595</color>
 
+    <!-- Ana Sarı Renk -->
+    <color name="primary_yellow">#FFC120</color>
+
+    <!-- İkincil Renkler (Palet) -->
+    <color name="secondary_light_yellow">#FFDC6B</color>
+    <color name="secondary_dark_yellow">#FF9C00</color>
+    <color name="tertiary_yellow">#FFD54F</color>
+    <color name="complementary_yellow">#FFEB3B</color>
+
+
 
 
 
