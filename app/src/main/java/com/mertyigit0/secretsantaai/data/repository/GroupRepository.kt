@@ -37,4 +37,44 @@ class GroupRepository @Inject constructor(
             .map { chars.random() }
             .joinToString("")
     }
+
+    // Grubun var olup olmadığını kontrol eden fonksiyon
+    fun checkIfGroupExists(groupId: String): LiveData<Result<Boolean>> {
+        val result = MutableLiveData<Result<Boolean>>()
+
+        firestore.collection("groups").document(groupId)
+            .get()
+            .addOnCompleteListener { task ->
+                result.value = if (task.isSuccessful && task.result.exists()) {
+                    Result.success(true)  // Grup mevcut
+                } else {
+                    Result.success(false)  // Grup mevcut değil
+                }
+            }
+            .addOnFailureListener {
+                result.value = Result.failure(it)  // Hata durumunda
+            }
+
+        return result
+    }
+
+    // Kullanıcıyı gruba eklemek için fonksiyon
+    fun joinGroup(groupId: String, userId: String): LiveData<Result<Boolean>> {
+        val result = MutableLiveData<Result<Boolean>>()
+
+        firestore.collection("groups").document(groupId)
+            .update("members", listOf(userId))  // Grup üyelerine kullanıcıyı ekleme
+            .addOnCompleteListener { task ->
+                result.value = if (task.isSuccessful) {
+                    Result.success(true)  // Başarılı
+                } else {
+                    Result.failure(task.exception ?: Exception("Group join failed"))
+                }
+            }
+
+        return result
+    }
+
+
+
 }
