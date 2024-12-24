@@ -46,7 +46,11 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mertyigit0.secretsantaai.ui.fragment.SettingFragment"
-        android:label="Settings" />
+        android:label="Settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/joinGroupFragment"
         android:name="com.mertyigit0.secretsantaai.ui.fragment.JoinGroupFragment"
