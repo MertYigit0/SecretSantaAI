@@ -20,7 +20,6 @@ class CreateGroupFragment : Fragment() {
     private var _binding: FragmentCreateGroupBinding? = null
     private val binding get() = _binding!!
 
-    // Hilt ile ViewModel enjeksiyonu
     private val createGroupViewModel: CreateGroupViewModel by viewModels()
 
     override fun onCreateView(
@@ -52,18 +51,35 @@ class CreateGroupFragment : Fragment() {
             if (userName.isEmpty() || groupName.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // LiveData'yı gözlemleme
-                createGroupViewModel.createGroup(groupName, userName).observe(viewLifecycleOwner, Observer { result ->
-                    result.onSuccess {
-                        Toast.makeText(requireContext(), "Group Created", Toast.LENGTH_SHORT).show()
-                        // Grup oluşturulmuşsa başka bir yere yönlendirme yapılabilir
-                        findNavController().navigate(R.id.action_createGroupFragment_to_homeFragment)
+                // Kullanıcı ID'sini almak için ViewModel veya AuthRepository kullanın
+                createGroupViewModel.getUserId().observe(viewLifecycleOwner, Observer { result ->
+                    result.onSuccess { creatorId ->
+                        // Burada creatorId olarak kullanıcının daha önce oluşturulan userId'sini alıyoruz
+                        createGroupViewModel.createGroup(groupName, creatorId).observe(viewLifecycleOwner, Observer { createResult ->
+                            createResult.onSuccess {
+                                Toast.makeText(requireContext(), "Group Created", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(R.id.action_createGroupFragment_to_homeFragment)
+                            }.onFailure {
+                                Toast.makeText(requireContext(), "Group creation failed: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        })
                     }.onFailure {
-                        Toast.makeText(requireContext(), "Group creation failed: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Failed to get user ID: ${it.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
             }
         }
+
+
+        // Join Group butonuna tıklama
+
+    }
+
+    private fun generateUniqueId(length: Int): String {
+        val chars = "0123456789"
+        return (1..length)
+            .map { chars.random() }
+            .joinToString("")
     }
 
     override fun onDestroyView() {
