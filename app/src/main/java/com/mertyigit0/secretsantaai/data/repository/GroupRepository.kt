@@ -2,12 +2,16 @@ package com.mertyigit0.secretsantaai.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.SetOptions
+import com.mertyigit0.secretsantaai.data.model.Group
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth
 ) {
 
     // Yeni grup oluşturma fonksiyonu
@@ -78,15 +82,25 @@ class GroupRepository @Inject constructor(
     // Kullanıcıyı gruba eklemek için yardımcı fonksiyon
     private fun addUserToGroup(userId: String, groupId: String) {
         val userDoc = firestore.collection("users").document(userId)
-        userDoc.update("groupIds", FieldValue.arrayUnion(groupId))
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Kullanıcıya grup ID'si başarıyla eklendi
-                } else {
-                    // Hata işlemi
-                }
+        userDoc.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                userDoc.update("groupIds", FieldValue.arrayUnion(groupId))
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            task.exception?.printStackTrace()
+                        }
+                    }
+            } else {
+                userDoc.set(mapOf("groupIds" to listOf(groupId)), SetOptions.merge())
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            task.exception?.printStackTrace()
+                        }
+                    }
             }
+        }
     }
+
 
     // Benzersiz ID oluşturma fonksiyonu
     private fun generateUniqueId(length: Int): String {
@@ -94,6 +108,43 @@ class GroupRepository @Inject constructor(
         return (1..length)
             .map { chars.random() }
             .joinToString("")
+    }
+
+
+
+    fun getUserGroups(): LiveData<Result<List<Group>>> {
+        val result = MutableLiveData<Result<List<Group>>>()
+        val userId = firebaseAuth.currentUser?.uid
+
+        if (userId == null) {
+            result.value = Result.failure(Exception("User not logged in"))
+            return result
+        }
+
+        firestore.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val groupIds = document["groupIds"] as? List<String> ?: emptyList()
+                if (groupIds.isEmpty()) {
+                    result.value = Result.success(emptyList())
+                } else {
+                    firestore.collection("groups")
+                        .whereIn("groupId", groupIds)
+                        .get()
+                        .addOnSuccessListener { querySnapshot ->
+                            val groups = querySnapshot.documents.mapNotNull { it.toObject(Group::class.java) }
+                            result.value = Result.success(groups)
+                        }
+                        .addOnFailureListener { exception ->
+                            result.value = Result.failure(exception)
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                result.value = Result.failure(exception)
+            }
+
+        return result
     }
 }
 
