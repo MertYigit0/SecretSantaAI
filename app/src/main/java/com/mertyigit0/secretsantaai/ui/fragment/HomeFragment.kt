@@ -20,13 +20,12 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
-
     private lateinit var groupAdapter: GroupAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,18 +37,20 @@ class HomeFragment : Fragment() {
         binding.recyclerViewGroups.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewGroups.adapter = groupAdapter
 
-        // Observe the groups the user has joined
+        // Tıklama olayını ekliyoruz
+        groupAdapter.setOnItemClickListener { group ->
+            val action = HomeFragmentDirections.actionHomeFragmentToGroupDetailFragment(group.groupId)
+            findNavController().navigate(action)
+        }
+
+        // Grupları gözlemliyoruz
         homeViewModel.groups.observe(viewLifecycleOwner) { groups ->
-            if (groups.isNullOrEmpty()) {
+            if (groups.isEmpty()) {
                 binding.emptyStateText.visibility = View.VISIBLE
             } else {
                 binding.emptyStateText.visibility = View.GONE
                 groupAdapter.submitList(groups)
             }
-        }
-
-        binding.btnCreateGroup.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
         }
     }
 

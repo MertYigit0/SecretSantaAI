@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_homeFragment_to_createGroupFragment"
             app:destination="@id/createGroupFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_groupDetailFragment"
+            app:destination="@id/groupDetailFragment" />
     </fragment>
 
     <fragment
@@ -68,4 +71,16 @@
             android:id="@+id/action_createGroupFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/groupDetailFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.GroupDetailFragment"
+        android:label="Group Detail"
+        tools:layout="@layout/fragment_group_detail">
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+    </fragment>
+
+
+
 </navigation>
