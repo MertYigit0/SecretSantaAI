@@ -42,6 +42,7 @@
     <string name="theme">Theme</string>
     <string name="privacy">Privacy</string>
     <string name="notifications">Notifications</string>
+    <string name="groups">Groups</string>
 
 
 </resources>

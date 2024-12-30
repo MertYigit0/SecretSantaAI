@@ -80,7 +80,11 @@
             android:name="groupId"
             app:argType="string" />
     </fragment>
-
+    <fragment
+        android:id="@+id/tabFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.TabFragment"
+        android:label="fragment_tab"
+        tools:layout="@layout/fragment_tab" />
 
 
 </navigation>

@@ -16,9 +16,9 @@
         android:icon="@drawable/baseline_auto_awesome_24"
         android:title="@string/ai_help" />
     <item
-        android:id="@+id/joinGroupFragment"
+        android:id="@+id/tabFragment"
         android:icon="@drawable/baseline_group_add_24"
-        android:title="@string/join_group" />
+        android:title="@string/groups" />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/baseline_settings_24"
