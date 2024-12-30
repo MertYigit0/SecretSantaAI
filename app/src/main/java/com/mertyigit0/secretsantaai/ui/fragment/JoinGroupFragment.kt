@@ -35,7 +35,7 @@ class JoinGroupFragment : Fragment() {
             showJoinGroupDialog()
         }
 
-        // Observe the LiveData for join group result
+        // Join işlemi sonucunu gözlemliyoruz
         joinGroupViewModel.joinGroupResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 Toast.makeText(requireContext(), "Successfully joined the group", Toast.LENGTH_SHORT).show()
@@ -65,9 +65,7 @@ class JoinGroupFragment : Fragment() {
             dialog.dismiss()
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
 
         builder.show()
     }
@@ -77,5 +75,3 @@ class JoinGroupFragment : Fragment() {
         _binding = null
     }
 }
-
-

@@ -11,8 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentHomeBinding
-import com.mertyigit0.secretsantaai.ui.adapter.GroupAdapter
-import com.mertyigit0.secretsantaai.viewmodels.HomeViewModel
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +19,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,19 +34,6 @@ class HomeFragment : Fragment() {
 
 
 
-        val adapter = GroupAdapter(emptyList())
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
-
-        homeViewModel.groups.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { groups ->
-                binding.recyclerView.adapter = GroupAdapter(groups)
-            }.onFailure {
-                Toast.makeText(requireContext(), "Failed to load groups: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        homeViewModel.loadUserGroups()
 
         binding.btnCreateGroup.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
