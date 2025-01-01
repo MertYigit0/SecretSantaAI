@@ -29,4 +29,20 @@ class GroupRepository @Inject constructor(
             null
         }
     }
+
+    // Kullanıcının katıldığı grupları almak
+    suspend fun getUserGroups(userId: String): List<Group> {
+        val groups = mutableListOf<Group>()
+        val groupDocs = db.collection("groups")
+            .whereArrayContains("members", userId) // "members" listesinde userId'yi arar
+            .get()
+            .await()
+
+        for (document in groupDocs) {
+            val group = document.toObject(Group::class.java)
+            groups.add(group)
+        }
+
+        return groups
+    }
 }

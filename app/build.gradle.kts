@@ -80,6 +80,8 @@ dependencies {
     implementation (libs.converter.gson)
 
 
+    //QR CODE
+    implementation (libs.core)
 
 
     implementation(platform(libs.firebase.bom))

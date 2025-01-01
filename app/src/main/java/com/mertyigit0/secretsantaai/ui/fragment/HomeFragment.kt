@@ -42,6 +42,9 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToGroupDetailFragment(group.groupId)
             findNavController().navigate(action)
         }
+        binding.btnCreateGroup.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
+        }
 
         // Grupları gözlemliyoruz
         homeViewModel.groups.observe(viewLifecycleOwner) { groups ->
