@@ -1,17 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="@color/primary_light_extra_pink"
     app:cardCornerRadius="8dp"
     android:layout_margin="8dp">
 
-    <android.widget.TextView
-        android:id="@+id/groupName"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group Name"
-        android:textSize="18sp"
-        android:layout_margin="16dp" />
+        android:padding="16dp">
+
+        <!-- Group Name -->
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- People Icon -->
+        <ImageView
+            android:id="@+id/peopleIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/baseline_people_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupName" />
+
+        <!-- People TextView -->
+        <TextView
+            android:id="@+id/peopleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="People Count"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/peopleIcon"
+            app:layout_constraintTop_toTopOf="@id/peopleIcon"
+            android:layout_marginStart="8dp" />
+
+        <!-- Date TextView -->
+
+        <!-- Check Icon -->
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="116dp"
+            android:text="Date Info"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/peopleTextView"
+            app:layout_constraintTop_toTopOf="@id/peopleTextView" />
+
+        <ImageView
+            android:id="@+id/checkIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/baseline_access_time_24"
+            app:layout_constraintStart_toEndOf="@id/dateTextView"
+            app:layout_constraintTop_toTopOf="@id/dateTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>
