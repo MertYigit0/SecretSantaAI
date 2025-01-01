@@ -28,8 +28,9 @@ class InviteFragment : Fragment() {
 
     private val groupAdapter = GroupAdapter()
 
-    // Firebase Authentication instance
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private var selectedGroup: Group? = null // Seçili grup
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,44 +43,44 @@ class InviteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // RecyclerView yapılandırması
-        binding.groupsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.groupsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.groupsRecyclerView.adapter = groupAdapter
 
-        // Kullanıcı ID'si ile grupları yükleme
-        val userId = auth.currentUser?.uid // Firebase Authentication'dan kullanıcı ID'si alıyoruz
+        val userId = auth.currentUser?.uid
 
         if (userId != null) {
             inviteViewModel.loadUserGroups(userId)
         } else {
-            // Kullanıcı oturum açmamışsa uyarı göster
             Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
         }
 
-        // Kullanıcı gruplarını gözlemliyoruz
         inviteViewModel.userGroups.observe(viewLifecycleOwner) { groups ->
             groupAdapter.submitList(groups)
         }
 
-        // Tıklama olayını dinliyoruz
         groupAdapter.setOnItemClickListener { group ->
-            generateQrCode(group)
+            selectedGroup = group // Seçili grubu tutuyoruz
+        }
+
+        binding.generateQrButton.setOnClickListener {
+            selectedGroup?.let { group ->
+                generateQrCode(group) // QR kodunu yalnızca butona basıldığında üret
+            } ?: run {
+                Toast.makeText(requireContext(), "Please select a group", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    // QR kod üretme fonksiyonu
     private fun generateQrCode(group: Group) {
         try {
-            val qrCodeData = group.groupId // QR kod için grup ID'sini kullanıyoruz
+            val qrCodeData = group.groupId
 
             val hints = mutableMapOf<EncodeHintType, Any>()
-            hints[EncodeHintType.MARGIN] = 1 // QR kodunun kenar boşluğunu ayarlıyoruz
+            hints[EncodeHintType.MARGIN] = 1
 
-            // ZXing ile QR kodu üretiyoruz
             val qrCodeWriter = QRCodeWriter()
             val bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 512, 512, hints)
 
-            // QR kodu bitmap'e dönüştürme
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
@@ -90,10 +91,7 @@ class InviteFragment : Fragment() {
                 }
             }
 
-            // QR kodu bir ImageView'de gösterme
             binding.qrCodeImageView.setImageBitmap(bitmap)
-
-            // Kullanıcıya bilgilendirme
             Toast.makeText(requireContext(), "QR Code for ${group.groupName} generated", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error generating QR code", Toast.LENGTH_SHORT).show()
@@ -105,3 +103,4 @@ class InviteFragment : Fragment() {
         _binding = null
     }
 }
+

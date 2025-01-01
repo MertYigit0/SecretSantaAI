@@ -1,4 +1,3 @@
-<!-- res/layout/fragment_tab.xml -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,22 +5,35 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.TabFragment">
 
+    <!-- TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@android:color/holo_green_light"
+        android:background="@color/primary"
+        app:tabIndicatorColor="@color/on_surface"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@android:color/holo_green_light"
-        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="@color/on_surface"
+        app:tabTextColor="@color/primary_light_extra_pink"
         tools:ignore="MissingConstraints" />
 
+    <!-- Çizgi (View) -->
+    <View
+        android:id="@+id/lineSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+    app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+
+
+    <!-- ViewPager2 -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/lineSeparator" /> <!-- Çizgi altına yerleştirildi -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

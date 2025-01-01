@@ -31,10 +31,13 @@ class TabFragment : Fragment() {
         // ViewPager ve TabLayout ayarlaması
         val adapter = TabAdapter(this)
         binding.viewPager.adapter = adapter
+
+        // Tab isimlerini ve sıralarını belirtiyoruz
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Join Group"
-                1 -> tab.text = "Invite"
+            tab.text = when (position) {
+                0 -> "Join Group" // İlk fragment
+                1 -> "Invite"     // İkinci fragment
+                else -> "Tab ${position + 1}" // Diğer fragmentler
             }
         }.attach()
     }
