@@ -24,7 +24,7 @@ class CreateGroupViewModel : ViewModel() {
             "createdAt" to Calendar.getInstance().time.toString(),
             "budget" to budget,
             "note" to note,
-            "date" to selectedDate
+            "date" to selectedDate // 'date' olarak güncellendi
         )
 
         // Kullanıcı verisini oluşturuyoruz (kullanıcının gruplarına eklemek için)
@@ -51,3 +51,4 @@ class CreateGroupViewModel : ViewModel() {
             }
     }
 }
+

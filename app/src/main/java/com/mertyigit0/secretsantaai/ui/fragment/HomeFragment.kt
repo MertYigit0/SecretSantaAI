@@ -37,17 +37,24 @@ class HomeFragment : Fragment() {
         binding.recyclerViewGroups.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewGroups.adapter = groupAdapter
 
+        // Yükleme göstergesini görünür yap
+        binding.loadingProgressBar.visibility = View.VISIBLE
+
         // Tıklama olayını ekliyoruz
         groupAdapter.setOnItemClickListener { group ->
             val action = HomeFragmentDirections.actionHomeFragmentToGroupDetailFragment(group.groupId)
             findNavController().navigate(action)
         }
+
         binding.btnCreateGroup.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
         }
 
         // Grupları gözlemliyoruz
         homeViewModel.groups.observe(viewLifecycleOwner) { groups ->
+            // Yükleme göstergesini gizle
+            binding.loadingProgressBar.visibility = View.GONE
+
             if (groups.isEmpty()) {
                 binding.emptyStateText.visibility = View.VISIBLE
             } else {

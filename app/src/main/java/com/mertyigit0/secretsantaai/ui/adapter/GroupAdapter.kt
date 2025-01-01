@@ -27,26 +27,24 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
     inner class GroupViewHolder(private val binding: ItemGroupBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(group: Group, position: Int) {
             binding.groupName.text = group.groupName
+            binding.peopleTextView.text = "${group.members.size} Members"  // Üye sayısını ekle
+            binding.dateTextView.text = group.date ?: "No Date Set"  // 'date' olarak güncellendi
 
             // Seçili öğe durumuna göre renk değiştirme
             if (position == selectedPosition) {
-                // Seçili öğe için stil veya renk değişikliği
-                binding.root.setBackgroundColor(android.graphics.Color.LTGRAY) // Örneğin gri arka plan
+                binding.root.setBackgroundColor(Color.LTGRAY) // Seçili öğe için arka plan
             } else {
-                // Diğer öğeler için varsayılan stil
-                binding.root.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                binding.root.setBackgroundColor(Color.TRANSPARENT)
             }
 
-            // Tıklama işlemi
             itemView.setOnClickListener {
-                selectedPosition = position  // Tıklanan öğeyi seçili olarak işaretle
-                notifyDataSetChanged()  // Tüm öğeleri yeniden render et
+                selectedPosition = position
+                notifyDataSetChanged()
                 onItemClickListener?.invoke(group)
             }
         }
     }
 
-    // Tıklama dinleyicisini set etmek için metod
     fun setOnItemClickListener(listener: (Group) -> Unit) {
         onItemClickListener = listener
     }
@@ -61,5 +59,7 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
         }
     }
 }
+
+
 
 
