@@ -33,16 +33,31 @@ class GroupRepository @Inject constructor(
     // Kullanıcının katıldığı grupları almak
     suspend fun getUserGroups(userId: String): List<Group> {
         val groups = mutableListOf<Group>()
+
+        // Tüm grupları al
         val groupDocs = db.collection("groups")
-            .whereArrayContains("members", userId) // "members" listesinde userId'yi arar
             .get()
             .await()
 
         for (document in groupDocs) {
             val group = document.toObject(Group::class.java)
-            groups.add(group)
+
+            // Üyeler listesini kontrol et (userId'yi bulmak için)
+            val isMember = group.members.any { member ->
+                // Üyelerin her biri, bir Map<String, String> olmalı
+                val memberMap = member as? Map<String, String>
+                memberMap?.get("userId") == userId  // Kullanıcının userId'si burada kontrol ediliyor
+            }
+
+            if (isMember) {
+                groups.add(group)
+            }
         }
 
         return groups
     }
+
+
+
+
 }

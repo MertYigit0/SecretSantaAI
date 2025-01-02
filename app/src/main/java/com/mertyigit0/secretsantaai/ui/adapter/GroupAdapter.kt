@@ -27,16 +27,17 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
     inner class GroupViewHolder(private val binding: ItemGroupBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(group: Group, position: Int) {
             binding.groupName.text = group.groupName
-            binding.peopleTextView.text = "${group.members.size} Members"  // Üye sayısını ekle
+
+            // Üyelerin adlarını veya nickname'lerini gösterebilirsiniz.
+            val memberNicknames = group.members.joinToString { it["nickname"] ?: "Unknown" }
+            binding.peopleTextView.text = "${group.members.size}"
+
             binding.dateTextView.text = group.date ?: "No Date Set"  // 'date' olarak güncellendi
 
             // Seçili öğe durumuna göre renk değiştirme
             if (position == selectedPosition) {
                 binding.root.setBackgroundColor(Color.LTGRAY) // Seçili öğe için arka plan
-            } else {
-                binding.root.setBackgroundColor(Color.TRANSPARENT)
             }
-
             itemView.setOnClickListener {
                 selectedPosition = position
                 notifyDataSetChanged()
@@ -44,6 +45,7 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
             }
         }
     }
+
 
     fun setOnItemClickListener(listener: (Group) -> Unit) {
         onItemClickListener = listener

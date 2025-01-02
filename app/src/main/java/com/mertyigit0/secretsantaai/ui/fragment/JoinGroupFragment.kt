@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.appcompat.app.AlertDialog
 import com.mertyigit0.secretsantaai.databinding.FragmentJoinGroupBinding
 import com.mertyigit0.secretsantaai.viewmodels.JoinGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +36,6 @@ class JoinGroupFragment : Fragment() {
             showJoinGroupDialog()
         }
 
-        // Join işlemi sonucunu gözlemliyoruz
         joinGroupViewModel.joinGroupResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 Toast.makeText(requireContext(), "Successfully joined the group", Toast.LENGTH_SHORT).show()
@@ -48,19 +48,32 @@ class JoinGroupFragment : Fragment() {
 
     private fun showJoinGroupDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Enter Group ID")
+        builder.setTitle("Join Group")
 
-        val input = EditText(requireContext())
-        input.hint = "Group ID"
-        builder.setView(input)
+        val layout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 20, 50, 20)
+        }
+
+        val groupIdInput = EditText(requireContext()).apply {
+            hint = "Group ID"
+        }
+        val userNameInput = EditText(requireContext()).apply {
+            hint = "Your Name"
+        }
+
+        layout.addView(groupIdInput)
+        layout.addView(userNameInput)
+        builder.setView(layout)
 
         builder.setPositiveButton("OK") { dialog, _ ->
-            val groupId = input.text.toString().trim()
+            val groupId = groupIdInput.text.toString().trim()
+            val userName = userNameInput.text.toString().trim()
 
-            if (groupId.isNotEmpty()) {
-                joinGroupViewModel.joinGroup(groupId)
+            if (groupId.isNotEmpty() && userName.isNotEmpty()) {
+                joinGroupViewModel.joinGroup(groupId, userName)
             } else {
-                Toast.makeText(requireContext(), "Please enter a valid Group ID", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
             }
             dialog.dismiss()
         }

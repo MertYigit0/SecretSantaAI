@@ -1,13 +1,11 @@
 package com.mertyigit0.secretsantaai.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
-import com.mertyigit0.secretsantaai.data.model.Group
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -20,23 +18,25 @@ class JoinGroupViewModel @Inject constructor(
     private val _joinGroupResult = MutableLiveData<Result<Unit>>()
     val joinGroupResult: LiveData<Result<Unit>> get() = _joinGroupResult
 
-    fun joinGroup(groupId: String) {
+    fun joinGroup(groupId: String, userName: String) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
         firestore.collection("groups").document(groupId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val group = document.toObject(Group::class.java)
-                    if (group != null && !group.members.contains(userId)) {
-                        // Grup mevcut ve kullanıcı grupta değilse, kullanıcıyı ekle
-                        addUserToGroup(groupId, userId)
+                    val members = document.get("members") as? List<*> ?: emptyList<Any>()
+                    val alreadyJoined = members.any {
+                        val member = it as? Map<*, *> // Firestore'dan gelen veriyi güvenli şekilde işliyoruz
+                        member?.get("userId") == userId
+                    }
+
+                    if (!alreadyJoined) {
+                        addUserToGroup(groupId, userId, userName)
                     } else {
-                        // Kullanıcı zaten grupta veya grup yok
-                        _joinGroupResult.value = Result.failure(Exception("You are already a member of this group or group does not exist"))
+                        _joinGroupResult.value = Result.failure(Exception("You are already a member of this group"))
                     }
                 } else {
-                    // Grup bulunamadı
                     _joinGroupResult.value = Result.failure(Exception("Group not found"))
                 }
             }
@@ -45,12 +45,13 @@ class JoinGroupViewModel @Inject constructor(
             }
     }
 
-    private fun addUserToGroup(groupId: String, userId: String) {
-        // Kullanıcıyı gruba ekle
+
+    private fun addUserToGroup(groupId: String, userId: String, userName: String) {
+        val memberData = mapOf("userId" to userId, "userName" to userName)
+
         firestore.collection("groups").document(groupId)
-            .update("members", FieldValue.arrayUnion(userId))
+            .update("members", FieldValue.arrayUnion(memberData))
             .addOnSuccessListener {
-                // Kullanıcıyı başarılı bir şekilde gruba ekledik, şimdi kullanıcıyı da 'groupsJoined' alanına ekle
                 addGroupToUser(userId, groupId)
             }
             .addOnFailureListener { exception ->
@@ -59,11 +60,9 @@ class JoinGroupViewModel @Inject constructor(
     }
 
     private fun addGroupToUser(userId: String, groupId: String) {
-        // Kullanıcıya ait 'groupsJoined' koleksiyonunu güncelle
         firestore.collection("users").document(userId)
             .update("groupsJoined", FieldValue.arrayUnion(groupId))
             .addOnSuccessListener {
-                // Kullanıcıya grubu ekledik
                 _joinGroupResult.value = Result.success(Unit)
             }
             .addOnFailureListener { exception ->
