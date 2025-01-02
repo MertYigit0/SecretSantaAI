@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.mertyigit0.secretsantaai.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -18,13 +19,14 @@ class JoinGroupViewModel @Inject constructor(
     private val _joinGroupResult = MutableLiveData<Result<Unit>>()
     val joinGroupResult: LiveData<Result<Unit>> get() = _joinGroupResult
 
-    fun joinGroup(groupId: String, userName: String) {
+    fun joinGroup(groupId: String, Name: String) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
         firestore.collection("groups").document(groupId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
+                    // members listesi artık Member objeleri içermeli
                     val members = document.get("members") as? List<*> ?: emptyList<Any>()
                     val alreadyJoined = members.any {
                         val member = it as? Map<*, *> // Firestore'dan gelen veriyi güvenli şekilde işliyoruz
@@ -32,7 +34,7 @@ class JoinGroupViewModel @Inject constructor(
                     }
 
                     if (!alreadyJoined) {
-                        addUserToGroup(groupId, userId, userName)
+                        addUserToGroup(groupId, userId, Name)
                     } else {
                         _joinGroupResult.value = Result.failure(Exception("You are already a member of this group"))
                     }
@@ -45,10 +47,10 @@ class JoinGroupViewModel @Inject constructor(
             }
     }
 
+    private fun addUserToGroup(groupId: String, userId: String, name: String) {
+        val memberData = User(userId = userId, email = name)
 
-    private fun addUserToGroup(groupId: String, userId: String, userName: String) {
-        val memberData = mapOf("userId" to userId, "userName" to userName)
-
+        // Member objesini ekliyoruz
         firestore.collection("groups").document(groupId)
             .update("members", FieldValue.arrayUnion(memberData))
             .addOnSuccessListener {

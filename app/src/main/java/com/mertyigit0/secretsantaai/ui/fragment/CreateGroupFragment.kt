@@ -67,7 +67,7 @@ class CreateGroupFragment : Fragment() {
     }
 
     private fun createGroup() {
-        val userName = binding.editTextUserName.text.toString()
+        val name = binding.editTextUserName.text.toString()
         val groupName = binding.editTextGroupName.text.toString()
         val note = binding.editTextNote.text.toString()
         val budget = binding.seekBarBudget.progress
@@ -78,8 +78,8 @@ class CreateGroupFragment : Fragment() {
             dateFormat.format(it)
         }
 
-        if (userName.isNotEmpty() && groupName.isNotEmpty()) {
-            viewModel.createGroup(userName, groupName, note, budget, selectedDateString)
+        if (name.isNotEmpty() && groupName.isNotEmpty()) {
+            viewModel.createGroup(name, groupName, note, budget, selectedDateString)
             Snackbar.make(binding.root, "Group Created Successfully", Snackbar.LENGTH_LONG).show()
         } else {
             Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_LONG).show()

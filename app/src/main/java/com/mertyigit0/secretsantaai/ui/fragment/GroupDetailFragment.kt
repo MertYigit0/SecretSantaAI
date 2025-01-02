@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
+import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,9 +40,13 @@ class GroupDetailFragment : Fragment() {
         groupDetailViewModel.groupDetails.observe(viewLifecycleOwner, Observer { group ->
             group?.let {
                 binding.groupName.text = it.groupName
-                binding.membersText.text = it.members.joinToString(", ")
+
+                // RecyclerView için adapter ayarlıyoruz
+                val adapter = UserAdapter(it.users) // `members` bir List<Member> olduğu için sorun yok
+                binding.membersRecyclerView.adapter = adapter
             }
         })
+
     }
 
     override fun onDestroyView() {

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mertyigit0.secretsantaai.databinding.ItemGroupBinding
 import com.mertyigit0.secretsantaai.data.model.Group
 
+
 class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffCallback()) {
 
     private var onItemClickListener: ((Group) -> Unit)? = null
@@ -28,9 +29,9 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
         fun bind(group: Group, position: Int) {
             binding.groupName.text = group.groupName
 
-            // Üyelerin adlarını veya nickname'lerini gösterebilirsiniz.
-            val memberNicknames = group.members.joinToString { it["nickname"] ?: "Unknown" }
-            binding.peopleTextView.text = "${group.members.size}"
+            // Üyelerin adlarını birleştirerek gösterebiliriz
+            val memberNames = group.users.joinToString { it.userId }
+            binding.peopleTextView.text = memberNames // Üyelerin isimlerini gösteriyoruz
 
             binding.dateTextView.text = group.date ?: "No Date Set"  // 'date' olarak güncellendi
 
@@ -46,7 +47,6 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
         }
     }
 
-
     fun setOnItemClickListener(listener: (Group) -> Unit) {
         onItemClickListener = listener
     }
@@ -61,7 +61,3 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
         }
     }
 }
-
-
-
-

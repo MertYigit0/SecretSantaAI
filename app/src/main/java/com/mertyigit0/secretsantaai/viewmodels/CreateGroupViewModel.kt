@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.mertyigit0.secretsantaai.data.model.Group
+import com.mertyigit0.secretsantaai.data.model.User
 import java.util.*
 
 class CreateGroupViewModel : ViewModel() {
@@ -11,38 +13,37 @@ class CreateGroupViewModel : ViewModel() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createGroup(userName: String, groupName: String, note: String, budget: Int, selectedDate: String?) {
+    fun createGroup(name: String, groupName: String, note: String, budget: Int, selectedDate: String?) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
         // Grup verisini oluşturuyoruz
         val groupId = UUID.randomUUID().toString()
 
-        // Grup üyeleri listeyi oluşturuyoruz, başta sadece oluşturucu üye
-        val members = listOf(
-            hashMapOf(
-                "userId" to userId,
-                "nickname" to userName // nickname'i ekliyoruz
+        // Grup üyeleri listesini oluşturuyoruz, başta sadece oluşturucu üye
+        val users = listOf(
+            User(
+                userId = userId,
+                email =  name // nickname'i ekliyoruz
             )
         )
 
-        val groupData = hashMapOf(
-            "groupId" to groupId,
-            "groupName" to groupName,
-            "createdBy" to userId,
-            "members" to members, // üyeleri güncelledik
-            "createdAt" to Calendar.getInstance().time.toString(),
-            "budget" to budget,
-            "note" to note,
-            "date" to selectedDate // 'date' olarak güncellendi
+        // Grup verisini, Group veri yapısına uygun olarak oluşturuyoruz
+        val groupData = Group(
+            groupId = groupId,
+            groupName = groupName,
+            users = users, // Üyeleri güncelledik
+            createdAt = Calendar.getInstance().time.toString(),
+            budget = budget,
+            note = note,
+            date = selectedDate // 'date' olarak güncellendi
         )
 
-        // Kullanıcı verisini oluşturuyoruz (kullanıcının gruplarına eklemek için)
-        val userData = hashMapOf(
-            "userId" to userId,
-            "name" to userName,
-            "email" to firebaseAuth.currentUser?.email,
-            "groupsCreated" to listOf(groupId),
-            "groupsJoined" to listOf(groupId) // Kullanıcının katıldığı grubu da ekliyoruz
+        // Kullanıcı verisini, User veri yapısına uygun olarak oluşturuyoruz
+        val userData = User(
+            userId = userId,
+            email = firebaseAuth.currentUser?.email ?: "",
+            groupsCreated = listOf(groupId),
+            groupsJoined = listOf(groupId) // Kullanıcının katıldığı grubu da ekliyoruz
         )
 
         // Firestore'a grup verisini kaydediyoruz
@@ -63,4 +64,3 @@ class CreateGroupViewModel : ViewModel() {
             }
     }
 }
-
