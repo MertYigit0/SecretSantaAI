@@ -7,14 +7,15 @@
     android:backgroundTint="@color/primary_light_pink"
     android:background="@color/white">
 
+
     <ImageView
         android:id="@+id/gift_box_imageview"
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_height"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="4dp"
         android:contentDescription="@string/gift_box_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/gift_box" />
@@ -23,7 +24,6 @@
         android:id="@+id/textViewRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="@string/register"
         android:textColor="@color/on_background"
         android:textSize="@dimen/text_size_xlarge"
@@ -31,13 +31,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gift_box_imageview" />
+        tools:layout_editor_absoluteY="154dp" />
+
+    <TextView
+        android:id="@+id/textViewUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="Username"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userNameEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/userNameEditText"
+        android:layout_width="364dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/textbox_shape"
+        android:backgroundTint="@color/primary_light_extra_pink"
+        android:hint="Username"
+        android:inputType="textEmailAddress"
+        android:paddingStart="@dimen/padding_horizontal"
+        android:paddingEnd="@dimen/padding_horizontal"
+        android:textColorHint="@color/tgray"
+        app:layout_constraintBottom_toTopOf="@+id/textViewEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="@string/email"
         android:textColor="@color/gray"
         android:textSize="@dimen/text_size_large"
@@ -45,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewRegister" />
+        tools:layout_editor_absoluteY="297dp" />
 
 
     <EditText
