@@ -32,39 +32,33 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Kayıt butonuna tıklama işlemi
         binding.registerButton.setOnClickListener {
             val email = binding.registerEmailEditText.text.toString().trim()
             val password = binding.registerPasswordEditText.text.toString().trim()
             val confirmPassword = binding.registerConfirmPasswordEditText.text.toString().trim()
+            val username = binding.userNameEditText.text.toString().trim()
 
-            // Hata kontrolü
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else if (password != confirmPassword) {
                 Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
             } else {
-                registerViewModel.register(email, password)
+                registerViewModel.register(email, password, username)
             }
         }
 
-        // Kayıt işlemi sonucunu dinleme
         registerViewModel.registerStatus.observe(viewLifecycleOwner) { result ->
             when {
                 result.isSuccess -> {
-                    // Kayıt başarılı
                     Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
-                    // HomeFragment'e yönlendirme
                     findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
                 }
                 result.isFailure -> {
-                    // Kayıt başarısız
                     Toast.makeText(requireContext(), "Registration failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        // Zaten bir hesabı olan kullanıcılar için LoginFragment'e yönlendirme
         binding.loginNowText.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
