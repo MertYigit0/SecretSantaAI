@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
@@ -18,11 +18,12 @@ class GroupDetailFragment : Fragment() {
     private var _binding: FragmentGroupDetailBinding? = null
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
+    private lateinit var userAdapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGroupDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -30,23 +31,21 @@ class GroupDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Group ID'yi argümanlardan alıyoruz
-        val groupId = arguments?.getString("groupId") ?: return
+        userAdapter = UserAdapter(emptyList())
+        binding.membersRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = userAdapter
+        }
 
-        // Group detaylarını alıyoruz
+        val groupId = arguments?.getString("groupId") ?: return
         groupDetailViewModel.getGroupDetails(groupId)
 
-        // Group bilgilerini gözlemliyoruz
-        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner, Observer { group ->
+        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
             group?.let {
                 binding.groupName.text = it.groupName
-
-                // RecyclerView için adapter ayarlıyoruz
-                val adapter = UserAdapter(it.users) // `members` bir List<Member> olduğu için sorun yok
-                binding.membersRecyclerView.adapter = adapter
+                userAdapter.updateUsers(it.users)
             }
-        })
-
+        }
     }
 
     override fun onDestroyView() {
