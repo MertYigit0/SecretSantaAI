@@ -79,12 +79,20 @@
         <argument
             android:name="groupId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_groupDetailFragment_to_drawResultFragment"
+            app:destination="@id/drawResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/tabFragment"
         android:name="com.mertyigit0.secretsantaai.ui.fragment.TabFragment"
         android:label="fragment_tab"
         tools:layout="@layout/fragment_tab" />
+    <fragment
+        android:id="@+id/drawResultFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.DrawResultFragment"
+        android:label="fragment_draw_result"
+        tools:layout="@layout/fragment_draw_result" />
 
 
 </navigation>

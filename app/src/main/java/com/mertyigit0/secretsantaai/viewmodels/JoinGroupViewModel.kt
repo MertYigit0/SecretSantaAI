@@ -27,7 +27,7 @@ class JoinGroupViewModel @Inject constructor(
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     // members listesi artık Member objeleri içermeli
-                    val members = document.get("members") as? List<*> ?: emptyList<Any>()
+                    val members = document.get("users") as? List<*> ?: emptyList<Any>()
                     val alreadyJoined = members.any {
                         val member = it as? Map<*, *> // Firestore'dan gelen veriyi güvenli şekilde işliyoruz
                         member?.get("userId") == userId
@@ -48,11 +48,11 @@ class JoinGroupViewModel @Inject constructor(
     }
 
     private fun addUserToGroup(groupId: String, userId: String, name: String) {
-        val memberData = User(userId = userId, email = name)
+        val memberData = User(userId = userId, username = name)
 
         // Member objesini ekliyoruz
         firestore.collection("groups").document(groupId)
-            .update("members", FieldValue.arrayUnion(memberData))
+            .update("users", FieldValue.arrayUnion(memberData))
             .addOnSuccessListener {
                 addGroupToUser(userId, groupId)
             }
