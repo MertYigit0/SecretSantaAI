@@ -10,17 +10,12 @@ data class Group(
     val date: String? = null
 )
 
-
-
-
-
 data class User(
     val userId: String = "",
     val email: String = "",
+    val username: String = "",
     val groupsCreated: List<String> = emptyList(),
     val groupsJoined: List<String> = emptyList()
 )
-
-
 
 

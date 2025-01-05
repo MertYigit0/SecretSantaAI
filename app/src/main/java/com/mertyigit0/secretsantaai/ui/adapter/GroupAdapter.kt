@@ -29,9 +29,8 @@ class GroupAdapter : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffC
         fun bind(group: Group, position: Int) {
             binding.groupName.text = group.groupName
 
-            // Üyelerin adlarını birleştirerek gösterebiliriz
-            val memberNames = group.users.joinToString { it.userId }
-            binding.peopleTextView.text = memberNames // Üyelerin isimlerini gösteriyoruz
+            val memberCount = group.users.size.toString()
+            binding.peopleTextView.text = "$memberCount Participants" // Katılımcı sayısını göster
 
             binding.dateTextView.text = group.date ?: "No Date Set"  // 'date' olarak güncellendi
 

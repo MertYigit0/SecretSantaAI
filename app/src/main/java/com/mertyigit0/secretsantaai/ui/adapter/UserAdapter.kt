@@ -26,7 +26,7 @@ class UserAdapter(private val users: List<User>) : RecyclerView.Adapter<UserAdap
         private val userName: TextView = itemView.findViewById(R.id.memberName)  // memberName'ı userName olarak güncelledik
 
         fun bind(user: User) {
-            userName.text = user.email  // Email'i gösteriyoruz, isterseniz name kullanabilirsiniz
+            userName.text = user.username  // Email'i gösteriyoruz, isterseniz name kullanabilirsiniz
         }
     }
 }

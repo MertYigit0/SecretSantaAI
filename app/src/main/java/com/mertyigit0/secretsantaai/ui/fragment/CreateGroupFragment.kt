@@ -8,8 +8,12 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.app.ui.viewmodel.CreateGroupViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentCreateGroupBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,23 +71,34 @@ class CreateGroupFragment : Fragment() {
     }
 
     private fun createGroup() {
-        val name = binding.editTextUserName.text.toString()
-        val groupName = binding.editTextGroupName.text.toString()
-        val note = binding.editTextNote.text.toString()
-        val budget = binding.seekBarBudget.progress
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        // Convert selectedDate to String if not null
-        val selectedDateString = selectedDate?.let {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            dateFormat.format(it)
-        }
+        val userRef = FirebaseFirestore.getInstance().collection("users").document(userId)
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val name = document.getString("username") ?: "Unknown"
+                val email = document.getString("email") ?: "Unknown"
+                val groupName = binding.editTextGroupName.text.toString()
+                val note = binding.editTextNote.text.toString()
+                val budget = binding.seekBarBudget.progress
 
-        if (name.isNotEmpty() && groupName.isNotEmpty()) {
-            viewModel.createGroup(name, groupName, note, budget, selectedDateString)
-            Snackbar.make(binding.root, "Group Created Successfully", Snackbar.LENGTH_LONG).show()
-        } else {
-            Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_LONG).show()
+                val selectedDateString = selectedDate?.let {
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    dateFormat.format(it)
+                }
+
+                if (groupName.isNotEmpty()) {
+                    viewModel.createGroup(email,name, groupName, note, budget, selectedDateString)
+                    Snackbar.make(binding.root, "Group Created Successfully", Snackbar.LENGTH_LONG).show()
+                    findNavController().navigate(R.id.action_createGroupFragment_to_homeFragment)
+                } else {
+                    Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }.addOnFailureListener {
+            Snackbar.make(binding.root, "Failed to fetch user data", Snackbar.LENGTH_LONG).show()
         }
     }
+
 }
 

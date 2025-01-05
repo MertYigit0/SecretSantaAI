@@ -13,7 +13,7 @@ class CreateGroupViewModel : ViewModel() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createGroup(name: String, groupName: String, note: String, budget: Int, selectedDate: String?) {
+    fun createGroup(email: String,name: String, groupName: String, note: String, budget: Int, selectedDate: String?) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
         // Grup verisini oluşturuyoruz
@@ -23,7 +23,8 @@ class CreateGroupViewModel : ViewModel() {
         val users = listOf(
             User(
                 userId = userId,
-                email =  name // nickname'i ekliyoruz
+                email =  email, // nickname'i ekliyoruz
+                username = name,
             )
         )
 
@@ -38,13 +39,6 @@ class CreateGroupViewModel : ViewModel() {
             date = selectedDate // 'date' olarak güncellendi
         )
 
-        // Kullanıcı verisini, User veri yapısına uygun olarak oluşturuyoruz
-        val userData = User(
-            userId = userId,
-            email = firebaseAuth.currentUser?.email ?: "",
-            groupsCreated = listOf(groupId),
-            groupsJoined = listOf(groupId) // Kullanıcının katıldığı grubu da ekliyoruz
-        )
 
         // Firestore'a grup verisini kaydediyoruz
         firestore.collection("groups").document(groupId).set(groupData)
