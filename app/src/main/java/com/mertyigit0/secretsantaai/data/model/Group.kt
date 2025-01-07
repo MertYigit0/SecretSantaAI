@@ -7,8 +7,11 @@ data class Group(
     val createdAt: String = "",
     val budget: Int = 0,
     val note: String = "",
-    val date: String? = null
+    val date: String? = null,
+    val drawResults: Map<String, String> = emptyMap() // Çekiliş sonuçları
 )
+
+
 
 data class User(
     val userId: String = "",

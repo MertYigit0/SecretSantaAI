@@ -9,12 +9,15 @@ import androidx.fragment.app.viewModels
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mertyigit0.secretsantaai.databinding.FragmentDrawResultBinding
+import com.mertyigit0.secretsantaai.viewmodels.DrawResultViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DrawResultFragment : Fragment() {
 
     private var _binding: FragmentDrawResultBinding? = null
     private val binding get() = _binding!!
-    private val firestore = FirebaseFirestore.getInstance()
+    private val drawResultViewModel: DrawResultViewModel by viewModels()
     private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
@@ -28,21 +31,14 @@ class DrawResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userId = auth.currentUser?.uid ?: return
         val groupId = arguments?.getString("groupId") ?: return
+        val userId = auth.currentUser?.uid ?: return
 
-        // Kullanıcının hediye alacağı kişiyi almak
-        firestore.collection("drawResults")
-            .document(userId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val recipientId = document.getString("recipientId")
-                    binding.giftReceiverTextView.text = "You will give a gift to: $recipientId"
-                } else {
-                    binding.giftReceiverTextView.text = "No draw result found."
-                }
-            }
+        drawResultViewModel.fetchDrawResult(userId, groupId)
+
+        drawResultViewModel.giftReceiver.observe(viewLifecycleOwner) { receiverName ->
+            binding.giftReceiverTextView.text = receiverName ?: "No match found."
+        }
     }
 
     override fun onDestroyView() {

@@ -16,7 +16,6 @@ import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class GroupDetailFragment : Fragment() {
@@ -24,8 +23,7 @@ class GroupDetailFragment : Fragment() {
     private var _binding: FragmentGroupDetailBinding? = null
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+
     private lateinit var userAdapter: UserAdapter
 
     override fun onCreateView(
@@ -47,13 +45,8 @@ class GroupDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = userAdapter
         }
-        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
-            group?.let {
-                binding.groupName.text = it.groupName
-                userAdapter.updateUsers(it.users)
-            }
-        }
 
+        // groupDetails LiveData'yı observe et
         groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
             group?.let { nonNullGroup ->
                 binding.groupName.text = nonNullGroup.groupName
@@ -66,7 +59,26 @@ class GroupDetailFragment : Fragment() {
             }
         }
 
+        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
+            group?.let {
+                binding.groupName.text = it.groupName
+                userAdapter.updateUsers(it.users)
+            }
+        }
+/*
+        // Hata mesajlarını observe et
+        groupDetailViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                // Hata mesajı varsa, kullanıcıya göster
+                binding.errorTextView.text = it
+                binding.errorTextView.visibility = View.VISIBLE
+            } ?: run {
+                // Hata mesajı yoksa, gizle
+                binding.errorTextView.visibility = View.GONE
+            }
+        }
 
+       */
     }
 
     private fun performDraw(users: List<User>, groupId: String) {
@@ -74,21 +86,25 @@ class GroupDetailFragment : Fragment() {
         val shuffledUserIds = userIds.shuffled()
 
         // Çekilişi yap
+        val drawResults = mutableMapOf<String, String>()
         for (i in userIds.indices) {
             val giverId = userIds[i]
             val recipientId = shuffledUserIds[(i + 1) % userIds.size]
 
-            // Sonuçları Firestore'a kaydet
-            firestore.collection("drawResults")
-                .document(giverId)
-                .set(mapOf("recipientId" to recipientId, "groupId" to groupId))
-                .addOnSuccessListener {
-                    // Çekiliş tamamlandı, kullanıcıyı DrawResultFragment'e yönlendir
-                    findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
-                        putString("groupId", groupId)
-                    })
-                }
+            // Sonuçları haritaya ekle
+            drawResults[giverId] = recipientId
         }
+
+        // Çekiliş sonuçlarını Firestore'a kaydet
+        FirebaseFirestore.getInstance().collection("groups")
+            .document(groupId)
+            .update("drawResults", drawResults)
+            .addOnSuccessListener {
+                // Çekiliş tamamlandı
+                findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
+                    putString("groupId", groupId)
+                })
+            }
     }
 
     override fun onDestroyView() {
@@ -96,3 +112,5 @@ class GroupDetailFragment : Fragment() {
         _binding = null
     }
 }
+
+
