@@ -46,39 +46,34 @@ class GroupDetailFragment : Fragment() {
             adapter = userAdapter
         }
 
-        // groupDetails LiveData'yı observe et
         groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
             group?.let { nonNullGroup ->
                 binding.groupName.text = nonNullGroup.groupName
+                userAdapter.updateUsers(nonNullGroup.users)
+
+                // Eğer çekiliş yapılmışsa butonun metnini "Show Result" olarak değiştir
+                val isDrawn = nonNullGroup.drawResults != null && nonNullGroup.drawResults.isNotEmpty()
+                val buttonText = if (isDrawn) {
+                    "Show Result"
+                } else {
+                    "Draw Raffle"
+                }
+                binding.drawRaffleButton.text = buttonText
 
                 // Çekiliş yapılacak butonun tıklama işlemi
                 binding.drawRaffleButton.setOnClickListener {
-                    // Kullanıcıların listesine erişim
-                    performDraw(nonNullGroup.users, groupId)
+                    if (isDrawn) {
+                        // Çekiliş sonucu gösterme
+                        findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
+                            putString("groupId", groupId)
+                        })
+                    } else {
+                        // Çekilişi başlat
+                        performDraw(nonNullGroup.users, groupId)
+                    }
                 }
             }
         }
-
-        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
-            group?.let {
-                binding.groupName.text = it.groupName
-                userAdapter.updateUsers(it.users)
-            }
-        }
-/*
-        // Hata mesajlarını observe et
-        groupDetailViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                // Hata mesajı varsa, kullanıcıya göster
-                binding.errorTextView.text = it
-                binding.errorTextView.visibility = View.VISIBLE
-            } ?: run {
-                // Hata mesajı yoksa, gizle
-                binding.errorTextView.visibility = View.GONE
-            }
-        }
-
-       */
     }
 
     private fun performDraw(users: List<User>, groupId: String) {
@@ -112,5 +107,7 @@ class GroupDetailFragment : Fragment() {
         _binding = null
     }
 }
+
+
 
 
