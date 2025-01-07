@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.data.model.User
@@ -23,7 +22,6 @@ class GroupDetailFragment : Fragment() {
     private var _binding: FragmentGroupDetailBinding? = null
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
-
     private lateinit var userAdapter: UserAdapter
 
     override fun onCreateView(
@@ -52,7 +50,7 @@ class GroupDetailFragment : Fragment() {
                 userAdapter.updateUsers(nonNullGroup.users)
 
                 // Eğer çekiliş yapılmışsa butonun metnini "Show Result" olarak değiştir
-                val isDrawn = nonNullGroup.drawResults != null && nonNullGroup.drawResults.isNotEmpty()
+                val isDrawn = nonNullGroup.drawResults.isNotEmpty()
                 val buttonText = if (isDrawn) {
                     "Show Result"
                 } else {
@@ -82,12 +80,20 @@ class GroupDetailFragment : Fragment() {
 
         // Çekilişi yap
         val drawResults = mutableMapOf<String, String>()
+        val usedRecipients = mutableSetOf<String>()
+
         for (i in userIds.indices) {
             val giverId = userIds[i]
-            val recipientId = shuffledUserIds[(i + 1) % userIds.size]
+            var recipientId: String
 
-            // Sonuçları haritaya ekle
+            // Random bir alıcı seç, ancak aynı kişiden hediye almasını engelle
+            do {
+                recipientId = shuffledUserIds[(i + 1) % userIds.size]
+            } while (usedRecipients.contains(recipientId) || recipientId == giverId)
+
+            // Sonuçları haritaya ekle ve alıcıyı "kullanılmış" olarak işaretle
             drawResults[giverId] = recipientId
+            usedRecipients.add(recipientId)
         }
 
         // Çekiliş sonuçlarını Firestore'a kaydet
@@ -101,6 +107,7 @@ class GroupDetailFragment : Fragment() {
                 })
             }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

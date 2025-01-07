@@ -54,28 +54,5 @@ class GroupDetailViewModel @Inject constructor(
             }
         }
     }
-
-    // Çekilişi yapmak için bir fonksiyon (çekiliş sonucu Firestore'a kaydedilecek)
-    fun performDraw(groupId: String, users: List<User>) {
-        val userIds = users.map { it.userId }
-        val shuffledUserIds = userIds.shuffled()
-
-        // Çekilişi yap
-        val drawResults = mutableMapOf<String, String>()
-        for (i in userIds.indices) {
-            val giverId = userIds[i]
-            val recipientId = shuffledUserIds[(i + 1) % userIds.size]
-            drawResults[giverId] = recipientId
-        }
-
-        // Çekiliş sonuçlarını Firestore'a kaydet
-        FirebaseFirestore.getInstance().collection("groups")
-            .document(groupId)
-            .update("drawResults", drawResults)
-            .addOnSuccessListener {
-                // Çekiliş tamamlandıktan sonra durumu güncelle
-                _isDrawPerformed.postValue(true)
-            }
-    }
 }
 
