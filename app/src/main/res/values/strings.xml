@@ -45,4 +45,16 @@
     <string name="groups">Groups</string>
 
 
+    <string-array name="special_occasions">
+        <item>Doğum Günü</item>
+        <item>Christmas</item>
+        <item>Yılbaşı</item>
+        <item>Anneler Günü</item>
+        <item>Babalar Günü</item>
+        <item>Sevgililer Günü</item>
+        <item>Başarı</item>
+        <item>Yeni Yıl</item>
+    </string-array>
+
+
 </resources>

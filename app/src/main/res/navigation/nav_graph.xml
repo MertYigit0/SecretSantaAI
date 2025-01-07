@@ -45,7 +45,11 @@
     <fragment
         android:id="@+id/aiHelpFragment"
         android:name="com.mertyigit0.secretsantaai.ui.fragment.AiHelpFragment"
-        android:label="AI Help" />
+        android:label="AI Help" >
+        <action
+            android:id="@+id/action_aiHelpFragment_to_aiResultFragment"
+            app:destination="@id/aiResultFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mertyigit0.secretsantaai.ui.fragment.SettingFragment"
@@ -93,6 +97,11 @@
         android:name="com.mertyigit0.secretsantaai.ui.fragment.DrawResultFragment"
         android:label="fragment_draw_result"
         tools:layout="@layout/fragment_draw_result" />
+    <fragment
+        android:id="@+id/aiResultFragment"
+        android:name="com.mertyigit0.secretsantaai.ui.fragment.AiResultFragment"
+        android:label="fragment_ai_result"
+        tools:layout="@layout/fragment_ai_result" />
 
 
 </navigation>

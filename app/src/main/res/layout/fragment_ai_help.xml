@@ -1,14 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.AiHelpFragment">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:scrollbars="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Yaş Girişi -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/ageLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yaş"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/ageEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Yaş"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Cinsiyet Seçimi -->
+    <TextView
+        android:id="@+id/genderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cinsiyet"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/genderRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/maleRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Erkek" />
+
+        <RadioButton
+            android:id="@+id/femaleRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kadın" />
+
+        <RadioButton
+            android:id="@+id/otherRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diğer" />
+    </RadioGroup>
+
+    <!-- Özel Gün Seçimi -->
+    <TextView
+        android:id="@+id/occasionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Özel Gün"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/occasionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/special_occasions"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- İlgi Alanları -->
+    <TextView
+        android:id="@+id/interestsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="İlgi Alanları"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/interestsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kitaplar, teknoloji, spor, vb."
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Bütçe -->
+    <TextView
+        android:id="@+id/budgetLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bütçe"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/budgetEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Bütçe"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Hediye Önerisi Butonu -->
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hediye Önerisi Al"/>
+</LinearLayout>
