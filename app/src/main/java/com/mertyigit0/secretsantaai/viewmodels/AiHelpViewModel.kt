@@ -20,16 +20,22 @@ class AiHelpViewModel : ViewModel() {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
-        apiKey = BuildConfig.MAPS_API_KEY// API anahtarınızı buraya ekleyin
+        apiKey = BuildConfig.MAPS_API_KEY
     )
 
     // Kullanıcının gönderdiği bilgilerle hediye önerisi alıyoruz
-    fun getGiftRecommendation(age: String, gender: String, occasion: String) {
+    fun getGiftRecommendation(age: String, gender: String, occasion: String, interests: String, budget: String) {
         _uiState.value = UiState.Loading
 
-
         // API'ye gönderilecek prompt
-        val prompt = "Öneri al: Yaş: $age, Cinsiyet: $gender, Özel Gün: $occasion"
+        val prompt = """
+            Yaş: $age
+            Cinsiyet: $gender
+            Özel Gün: $occasion
+            İlgi Alanları: $interests
+            Bütçe: $budget
+            Lütfen 10 hediye önerisi ver. Her öneriyi kısa ve öz şekilde listele.
+        """.trimIndent()
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
