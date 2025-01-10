@@ -88,7 +88,8 @@ class CreateGroupFragment : Fragment() {
                 }
 
                 if (groupName.isNotEmpty()) {
-                    viewModel.createGroup(email,name, groupName, note, budget, selectedDateString)
+                    // 'createdBy' parametresini ekliyoruz
+                    viewModel.createGroup(email, name, groupName, note, budget, selectedDateString, userId)
                     Snackbar.make(binding.root, "Group Created Successfully", Snackbar.LENGTH_LONG).show()
                     findNavController().navigate(R.id.action_createGroupFragment_to_homeFragment)
                 } else {
@@ -99,6 +100,7 @@ class CreateGroupFragment : Fragment() {
             Snackbar.make(binding.root, "Failed to fetch user data", Snackbar.LENGTH_LONG).show()
         }
     }
+
 
 }
 

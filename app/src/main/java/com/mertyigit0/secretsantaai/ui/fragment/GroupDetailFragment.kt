@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.data.model.User
@@ -23,6 +24,7 @@ class GroupDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
     private lateinit var userAdapter: UserAdapter
+    private lateinit var currentUser: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,30 +51,56 @@ class GroupDetailFragment : Fragment() {
                 binding.groupName.text = nonNullGroup.groupName
                 userAdapter.updateUsers(nonNullGroup.users)
 
-                // Eğer çekiliş yapılmışsa butonun metnini "Show Result" olarak değiştir
-                val isDrawn = nonNullGroup.drawResults.isNotEmpty()
-                val buttonText = if (isDrawn) {
-                    "Show Result"
-                } else {
-                    "Draw Raffle"
-                }
-                binding.drawRaffleButton.text = buttonText
+                // Mevcut kullanıcıyı al
+                val currentUser = nonNullGroup.users.find { it.userId == FirebaseAuth.getInstance().currentUser?.uid } ?: return@let
 
-                // Çekiliş yapılacak butonun tıklama işlemi
-                binding.drawRaffleButton.setOnClickListener {
-                    if (isDrawn) {
-                        // Çekiliş sonucu gösterme
-                        findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
-                            putString("groupId", groupId)
-                        })
+                // Eğer grup üyesi değilse buton metnini değiştir
+                if (!nonNullGroup.users.contains(currentUser)) {
+                    binding.drawRaffleButton.text = getString(R.string.group_not_member)
+                    binding.drawRaffleButton.isEnabled = false
+                } else {
+                    // Çekiliş yapılacak butonun tıklama işlemi
+                    val isDrawn = nonNullGroup.drawResults.isNotEmpty()
+                    var buttonText = if (isDrawn) {
+                        getString(R.string.show_result)
                     } else {
-                        // Çekilişi başlat
-                        performDraw(nonNullGroup.users, groupId)
+                        // Eğer grup kurucusu değilseniz, buton "Yönetici Bekleniyor" yazsın
+                        if (currentUser.userId != nonNullGroup.createdBy) {
+                            binding.drawRaffleButton.text = getString(R.string.waiting_for_admin)
+                            binding.drawRaffleButton.isEnabled = false
+                            return@let
+                        } else {
+                            getString(R.string.draw_raffle)
+                        }
                     }
+
+                    // Çekilişi başlatma
+                    binding.drawRaffleButton.text = buttonText
+                    binding.drawRaffleButton.isEnabled = true
+
+                    binding.drawRaffleButton.setOnClickListener {
+                        if (isDrawn) {
+                            // Çekiliş sonucu gösterme
+                            findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
+                                putString("groupId", nonNullGroup.groupId)
+                            })
+                        } else {
+                            // Çekilişi başlat
+                            performDraw(nonNullGroup.users, nonNullGroup.groupId)
+                        }
+                    }
+                }
+
+                // Grup üyelerinin sayısı 3'ten azsa çekilişi başlatma
+                if (nonNullGroup.users.size < 3) {
+                    binding.drawRaffleButton.text = getString(R.string.minimum_three_members)
+                    binding.drawRaffleButton.isEnabled = false
                 }
             }
         }
-    }
+
+        }
+
 
     private fun performDraw(users: List<User>, groupId: String) {
         val userIds = users.map { it.userId }
@@ -108,13 +136,9 @@ class GroupDetailFragment : Fragment() {
             }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
-
-
 
