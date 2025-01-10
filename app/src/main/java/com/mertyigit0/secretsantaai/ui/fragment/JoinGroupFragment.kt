@@ -58,20 +58,15 @@ class JoinGroupFragment : Fragment() {
         val groupIdInput = EditText(requireContext()).apply {
             hint = "Group ID"
         }
-        val NameInput = EditText(requireContext()).apply {
-            hint = "Your Name"
-        }
 
         layout.addView(groupIdInput)
-        layout.addView(NameInput)
         builder.setView(layout)
 
         builder.setPositiveButton("OK") { dialog, _ ->
             val groupId = groupIdInput.text.toString().trim()
-            val name = NameInput.text.toString().trim()
 
-            if (groupId.isNotEmpty() && name.isNotEmpty()) {
-                joinGroupViewModel.joinGroup(groupId, name)
+            if (groupId.isNotEmpty()) {
+                joinGroupViewModel.joinGroup(groupId)
             } else {
                 Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
             }

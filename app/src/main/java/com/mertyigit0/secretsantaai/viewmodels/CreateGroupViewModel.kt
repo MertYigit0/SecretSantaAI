@@ -23,7 +23,7 @@ class CreateGroupViewModel : ViewModel() {
         val users = listOf(
             User(
                 userId = userId,
-                email =  email, // nickname'i ekliyoruz
+                email =  email,
                 username = name,
             )
         )

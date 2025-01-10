@@ -19,7 +19,7 @@ class JoinGroupViewModel @Inject constructor(
     private val _joinGroupResult = MutableLiveData<Result<Unit>>()
     val joinGroupResult: LiveData<Result<Unit>> get() = _joinGroupResult
 
-    fun joinGroup(groupId: String, Name: String) {
+    fun joinGroup(groupId: String) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
         firestore.collection("groups").document(groupId)
@@ -34,7 +34,7 @@ class JoinGroupViewModel @Inject constructor(
                     }
 
                     if (!alreadyJoined) {
-                        addUserToGroup(groupId, userId, Name)
+                        addUserToGroup(groupId, userId)
                     } else {
                         _joinGroupResult.value = Result.failure(Exception("You are already a member of this group"))
                     }
@@ -47,19 +47,29 @@ class JoinGroupViewModel @Inject constructor(
             }
     }
 
-    private fun addUserToGroup(groupId: String, userId: String, name: String) {
-        val memberData = User(userId = userId, username = name)
-
-        // Member objesini ekliyoruz
-        firestore.collection("groups").document(groupId)
-            .update("users", FieldValue.arrayUnion(memberData))
-            .addOnSuccessListener {
-                addGroupToUser(userId, groupId)
+    private fun addUserToGroup(groupId: String, userId: String) {
+        firestore.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { userDocument ->
+                if (userDocument.exists()) {
+                    val userData = userDocument.data // Kullanıcının mevcut verileri
+                    firestore.collection("groups").document(groupId)
+                        .update("users", FieldValue.arrayUnion(userData)) // Tüm verileri ekliyoruz
+                        .addOnSuccessListener {
+                            addGroupToUser(userId, groupId)
+                        }
+                        .addOnFailureListener { exception ->
+                            _joinGroupResult.value = Result.failure(exception)
+                        }
+                } else {
+                    _joinGroupResult.value = Result.failure(Exception("User data not found"))
+                }
             }
             .addOnFailureListener { exception ->
                 _joinGroupResult.value = Result.failure(exception)
             }
     }
+
 
     private fun addGroupToUser(userId: String, groupId: String) {
         firestore.collection("users").document(userId)
