@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
-
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +31,16 @@ class RegisterViewModel @Inject constructor(
                             if (task.isSuccessful) {
                                 val userId = firebaseAuth.currentUser?.uid
                                 if (userId != null) {
-                                    addUserToFirestore(userId, email, username)
+                                    // FCM token'ını alıp Firestore'a kaydediyoruz
+                                    FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
+                                        if (!tokenTask.isSuccessful) {
+                                            _registerStatus.value = Result.failure(Exception("FCM token retrieval failed"))
+                                            return@addOnCompleteListener
+                                        }
+
+                                        val fcmToken = tokenTask.result
+                                        addUserToFirestore(userId, email, username, fcmToken)
+                                    }
                                 } else {
                                     _registerStatus.value = Result.failure(Exception("User ID is null"))
                                 }
@@ -48,8 +57,6 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-
-
     private fun checkUsernameAvailability(username: String, onResult: (Boolean) -> Unit) {
         firestore.collection("users")
             .whereEqualTo("username", username)
@@ -62,13 +69,14 @@ class RegisterViewModel @Inject constructor(
             }
     }
 
-    private fun addUserToFirestore(userId: String, email: String, username: String) {
+    private fun addUserToFirestore(userId: String, email: String, username: String, fcmToken: String?) {
         val user = mapOf(
             "userId" to userId,
             "email" to email,
             "username" to username,
             "groupsCreated" to emptyList<String>(),
-            "groupsJoined" to emptyList<String>()
+            "groupsJoined" to emptyList<String>(),
+            "fcmToken" to fcmToken // FCM token'ı ekliyoruz
         )
 
         firestore.collection("users")
@@ -83,5 +91,4 @@ class RegisterViewModel @Inject constructor(
                 _registerStatus.value = Result.failure(exception)
             }
     }
-
 }

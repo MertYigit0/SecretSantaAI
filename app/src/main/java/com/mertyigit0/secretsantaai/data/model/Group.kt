@@ -20,7 +20,8 @@ data class User(
     val email: String = "",
     val username: String = "",
     val groupsCreated: List<String> = emptyList(),
-    val groupsJoined: List<String> = emptyList()
+    val groupsJoined: List<String> = emptyList(),
+    val fcmToken: String? = null // FCM token'ı
 )
 
 

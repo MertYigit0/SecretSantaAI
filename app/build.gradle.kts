@@ -101,6 +101,8 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
+
 
 
     implementation(libs.androidx.datastore.preferences)

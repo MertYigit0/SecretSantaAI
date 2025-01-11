@@ -14,6 +14,7 @@ import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.data.model.User
 import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
+import com.mertyigit0.secretsantaai.utils.RaffleNotificationSender
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -129,12 +130,18 @@ class GroupDetailFragment : Fragment() {
             .document(groupId)
             .update("drawResults", drawResults)
             .addOnSuccessListener {
-                // Çekiliş tamamlandı
+                // Çekiliş tamamlandıktan sonra bildirim gönder
+                val groupName = "Group Name" // You can replace this with the actual group name
+                val raffleNotificationSender = RaffleNotificationSender()
+                raffleNotificationSender.sendNotificationToUsers(groupId, groupName)
+
+                // Çekiliş tamamlandıktan sonra sonucu göster
                 findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
                     putString("groupId", groupId)
                 })
             }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
