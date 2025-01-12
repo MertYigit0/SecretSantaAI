@@ -10,8 +10,11 @@ class SettingViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
-    // Kullanıcıyı çıkış yaptırmak için logout fonksiyonu
     fun logout() {
         auth.signOut()
+    }
+
+    fun isUserLoggedOut(): Boolean {
+        return auth.currentUser == null
     }
 }

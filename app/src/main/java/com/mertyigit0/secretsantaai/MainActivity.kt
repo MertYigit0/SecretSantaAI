@@ -12,9 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.mertyigit0.secretsantaai.databinding.ActivityMainBinding
+import com.mertyigit0.secretsantaai.ui.fragment.HomeFragment
+import com.mertyigit0.secretsantaai.ui.fragment.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,22 +34,49 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Bottom Navigation'ı ilk başta ayarla
         setupBottomNav()
-        hideOrShowBottomNav()
 
-        // Bildirim izni başlatıcısını burada tanımla
+        // Kullanıcı zaten giriş yaptıysa, HomeFragment'ı aç
+        if (auth.currentUser != null) {
+            navController.navigate(R.id.homeFragment) // Burada direkt olarak NavController kullanabilirsiniz
+        } else {
+            navController.navigate(R.id.loginFragment) // Burada da NavController kullanarak geçiş yapabilirsiniz
+        }
+
+        // **Launcher burada tanımlanıyor (onCreate'in başında)**
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
                 Toast.makeText(this, "Bildirim izni verildi.", Toast.LENGTH_SHORT).show()
-                // Bildirim izni verildikten sonra yapılacaklar
             } else {
                 Toast.makeText(this, "Bildirim izni verilmedi.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Android 13 ve üzeri için bildirim izni kontrolü
+        // Status Bar Rengi
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
+
+        // Destination değişimlerini dinle
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        // **Android 13 ve üzeri için izin kontrolü**
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkNotificationPermission()
+        }
+
+
+        // **Android 13 ve üzeri için izin kontrolü**
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkNotificationPermission()
         }
@@ -72,9 +103,9 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            // Zaten izin verildi, burada bildirim başlatılabilir
+            // İzin zaten verilmiş
         } else {
-            // Daha önce izin verilmediyse veya reddedildiyse izin iste
+            // İzin iste
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
