@@ -29,13 +29,25 @@ class AiHelpViewModel : ViewModel() {
 
         // API'ye gönderilecek prompt
         val prompt = """
-            Yaş: $age
-            Cinsiyet: $gender
-            Özel Gün: $occasion
-            İlgi Alanları: $interests
-            Bütçe: $budget
-            Lütfen 10 hediye önerisi ver. Her öneriyi kısa ve öz şekilde listele.
-        """.trimIndent()
+    Yaş: $age
+    Cinsiyet: $gender
+    Özel Gün: $occasion
+    İlgi Alanları: $interests
+    Bütçe: $budget
+
+    Lütfen aşağıdaki formatta tam olarak 10 adet hediye önerisi sunun. Her öneri kısa ve öz bir cümle olmalı ve sadece hediye önerisi içermelidir. Başka hiçbir açıklama veya metin eklemeyin.
+    
+    1. [Hediye Önerisi 1]
+    2. [Hediye Önerisi 2]
+    3. [Hediye Önerisi 3]
+    4. [Hediye Önerisi 4]
+    5. [Hediye Önerisi 5]
+    6. [Hediye Önerisi 6]
+    7. [Hediye Önerisi 7]
+    8. [Hediye Önerisi 8]
+    9. [Hediye Önerisi 9]
+    10. [Hediye Önerisi 10]
+""".trimIndent()
 
         viewModelScope.launch(Dispatchers.IO) {
             try {

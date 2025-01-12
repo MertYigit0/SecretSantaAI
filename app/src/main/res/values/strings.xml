@@ -51,6 +51,7 @@
     <string name="draw_raffle">Draw Raffle</string>
     <string name="show_result">Show Result</string>
     <string name="minimum_three_members">En Az 3 Kişi Olmalı</string>
+    <string name="generate_qr_code">Generate QR Code</string>
 
 
     <string-array name="special_occasions">

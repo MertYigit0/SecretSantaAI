@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,22 +8,30 @@
     android:backgroundTint="@color/primary_light_extra_pink"
     android:padding="16dp">
 
-    <!-- Yıldız ikonu -->
-    <ImageView
-        android:id="@+id/favoriteStar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/baseline_star_border_24" />
-
-    <TextView
-        android:id="@+id/giftRecommendationText"
+    <!-- RelativeLayout ile düzenleme -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="Hediye önerisi"
-        android:padding="8dp" />
+        android:layout_height="wrap_content">
+
+        <!-- Yıldız ikonu, sağ üst köşede -->
+        <ImageView
+            android:id="@+id/favoriteStar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/baseline_star_border_24" />
+
+        <!-- Hediye önerisi yazısı, yıldızın altında yer alacak -->
+        <TextView
+            android:id="@+id/giftRecommendationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Hediye önerisi"
+            android:layout_below="@id/favoriteStar"
+            android:padding="8dp" />
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

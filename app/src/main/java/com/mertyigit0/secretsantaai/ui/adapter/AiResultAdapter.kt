@@ -2,6 +2,7 @@
 package com.mertyigit0.secretsantaai.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mertyigit0.secretsantaai.R
@@ -21,27 +22,35 @@ class AiResultAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recommendation = recommendations[position]
-        holder.binding.giftRecommendationText.text = recommendation
 
-        // Yıldız simgesinin durumunu kontrol et
-        val starIcon = if (favoriteItems.contains(recommendation)) {
-            R.drawable.baseline_star_24 // Sarı yıldız
+        // Boş veri kontrolü
+        if (recommendation.isEmpty()) {
+            holder.binding.root.visibility = View.GONE // Boş ise CardView'i gizle
         } else {
-            R.drawable.baseline_star_border_24 // Boş yıldız
-        }
-        holder.binding.favoriteStar.setImageResource(starIcon)
+            holder.binding.root.visibility = View.VISIBLE // Veri varsa CardView'i göster
+            holder.binding.giftRecommendationText.text = recommendation
 
-        // Yıldız tıklama olayını işleyin
-        holder.binding.favoriteStar.setOnClickListener {
-            if (favoriteItems.contains(recommendation)) {
-                favoriteItems.remove(recommendation)
+            // Yıldız simgesinin durumu
+            val starIcon = if (favoriteItems.contains(recommendation)) {
+                R.drawable.baseline_star_24 // Sarı yıldız
             } else {
-                favoriteItems.add(recommendation)
+                R.drawable.baseline_star_border_24 // Boş yıldız
             }
-            notifyItemChanged(position)
-            onFavoriteClick(recommendation) // Favorilere ekle
+            holder.binding.favoriteStar.setImageResource(starIcon)
+
+            // Yıldız tıklama olayını işleyin
+            holder.binding.favoriteStar.setOnClickListener {
+                if (favoriteItems.contains(recommendation)) {
+                    favoriteItems.remove(recommendation)
+                } else {
+                    favoriteItems.add(recommendation)
+                }
+                notifyItemChanged(position)
+                onFavoriteClick(recommendation) // Favorilere ekle
+            }
         }
     }
+
 
     override fun getItemCount(): Int = recommendations.size
 

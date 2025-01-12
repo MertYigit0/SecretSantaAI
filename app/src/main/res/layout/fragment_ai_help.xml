@@ -112,5 +112,7 @@
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/primary_yellow"
+        android:textColor="@color/black"
         android:text="Hediye Önerisi Al"/>
 </LinearLayout>
