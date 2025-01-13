@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentSettingBinding
 import com.mertyigit0.secretsantaai.viewmodels.SettingViewModel
@@ -31,13 +32,28 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonLogout.setOnClickListener {
-            settingViewModel.logout()
+            showCustomLogoutDialog()
+        }
+    }
 
-            // Geriye doğru fragment temizleme işlemi kaldırıldı
-            findNavController().navigate(R.id.action_settingsFragment_to_loginFragment)
+    private fun showCustomLogoutDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_logout_custom, null)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogCancel).setOnClickListener {
+            dialog.dismiss()
         }
 
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogLogout).setOnClickListener {
+            settingViewModel.logout()
+            findNavController().navigate(R.id.action_settingsFragment_to_loginFragment)
+            dialog.dismiss()
+        }
 
+        dialog.show()
     }
 
     override fun onDestroyView() {

@@ -214,9 +214,10 @@
     <!-- Logout Button -->
     <Button
         android:id="@+id/button_logout"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="152dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:text="@string/logout"
         android:textColor="@android:color/white"
