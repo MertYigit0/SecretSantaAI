@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mertyigit0.secretsantaai.R
+import com.mertyigit0.secretsantaai.databinding.DialogJoinGroupCustomBinding
 import com.mertyigit0.secretsantaai.databinding.FragmentJoinGroupBinding
 import com.mertyigit0.secretsantaai.viewmodels.JoinGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,36 +49,29 @@ class JoinGroupFragment : Fragment() {
     }
 
     private fun showJoinGroupDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Join Group")
+        val dialogBinding = DialogJoinGroupCustomBinding.inflate(layoutInflater)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .create()
 
-        val layout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(50, 20, 50, 20)
-        }
-
-        val groupIdInput = EditText(requireContext()).apply {
-            hint = "Group ID"
-        }
-
-        layout.addView(groupIdInput)
-        builder.setView(layout)
-
-        builder.setPositiveButton("OK") { dialog, _ ->
-            val groupId = groupIdInput.text.toString().trim()
-
-            if (groupId.isNotEmpty()) {
-                joinGroupViewModel.joinGroup(groupId)
-            } else {
-                Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
-            }
+        dialogBinding.btnDialogCancel.setOnClickListener {
             dialog.dismiss()
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+        dialogBinding.btnDialogJoin.setOnClickListener {
+            val groupId = dialogBinding.etGroupId.text.toString().trim()
+            if (groupId.isNotEmpty()) {
+                joinGroupViewModel.joinGroup(groupId)
+                dialog.dismiss()
+            } else {
+                Toast.makeText(requireContext(), "Please enter a valid Group ID", Toast.LENGTH_SHORT).show()
+            }
+        }
 
-        builder.show()
+        dialog.show()
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
