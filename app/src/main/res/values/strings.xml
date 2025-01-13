@@ -72,6 +72,8 @@
     <string name="tab_default">Tab %1$d</string>
     <string name="participants_count">%1$d Participants</string>
     <string name="no_date_set">No Date Set</string>
+    <string name="save">Save</string>
+
 
     <string-array name="special_occasions">
         <item>Birthday</item>

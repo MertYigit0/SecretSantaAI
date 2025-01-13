@@ -38,7 +38,7 @@
     <string name="logout">Çıkış Yap</string>
     <string name="subscription">Abonelik</string>
     <string name="help">Yardım</string>
-    <string name="language_region">Dil / Bölge</string>
+    <string name="language_region">Dil</string>
     <string name="theme">Tema</string>
     <string name="privacy">Gizlilik</string>
     <string name="notifications">Bildirimler</string>
@@ -72,6 +72,10 @@
     <string name="tab_default">Sekme %1$d</string>
     <string name="participants_count">%1$d Katılımcı</string>
     <string name="no_date_set">Tarih Belirlenmemiş</string>
+    <string name="save">Kaydet</string>
+
+
+
 
     <string-array name="special_occasions">
         <item>Doğum Günü</item>
