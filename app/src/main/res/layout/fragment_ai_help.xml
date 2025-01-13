@@ -1,34 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    tools:context=".MainActivity">
 
-    <!-- Yaş Girişi -->
-    <TextView
+    <!-- Main Title -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mainTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI Gift Suggestions"
+        android:layout_gravity="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Subtitle -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/subTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fill in the details below for personalized gift suggestions"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Age Input -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/ageLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Yaş"
+        android:text="Age"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/ageEditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="Yaş"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ageEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Age"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Cinsiyet Seçimi -->
-    <TextView
+    <!-- Gender Selection -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/genderLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cinsiyet"
+        android:text="Gender"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -39,80 +67,96 @@
         android:orientation="horizontal"
         android:layout_marginBottom="16dp">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/maleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Erkek" />
+            android:text="Male" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/femaleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kadın" />
+            android:text="Female" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/otherRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Diğer" />
+            android:text="Other" />
     </RadioGroup>
 
-    <!-- Özel Gün Seçimi -->
-    <TextView
+    <!-- Special Occasion Selection -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/occasionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Özel Gün"
+        android:text="Special Occasion"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
-    <Spinner
-        android:id="@+id/occasionSpinner"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/special_occasions"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp">
+        <Spinner
+            android:id="@+id/occasionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/special_occasions"
+            android:layout_marginBottom="16dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- İlgi Alanları -->
-    <TextView
+
+    <!-- Interests -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/interestsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="İlgi Alanları"
+        android:text="Interests"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/interestsEditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Kitaplar, teknoloji, spor, vb."
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/interestsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Books, technology, sports, etc."/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Bütçe -->
-    <TextView
+    <!-- Budget -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/budgetLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bütçe"
+        android:text="Budget"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/budgetEditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Bütçe"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="32dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/budgetEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Budget"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Hediye Önerisi Butonu -->
-    <Button
+    <!-- AI Gift Suggestion Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary_yellow"
         android:textColor="@color/black"
-        android:text="Hediye Önerisi Al"/>
+        android:text="Get Gift Suggestions from AI"
+        android:layout_marginTop="16dp"/>
+
 </LinearLayout>

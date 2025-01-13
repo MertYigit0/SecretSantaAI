@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mertyigit0.secretsantaai.databinding.FragmentDrawResultBinding
 import com.mertyigit0.secretsantaai.viewmodels.DrawResultViewModel
 import com.airbnb.lottie.LottieAnimationView
+import com.mertyigit0.secretsantaai.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,7 +56,8 @@ class DrawResultFragment : Fragment() {
 
         drawResultViewModel.giftReceiver.observe(viewLifecycleOwner) { receiverName ->
             // Çekiliş sonucunu göster
-            binding.giftReceiverTextView.text = receiverName ?: "No match found."
+            binding.giftReceiverTextView.text = receiverName ?: getString(R.string.no_match_found)
+
         }
     }
 

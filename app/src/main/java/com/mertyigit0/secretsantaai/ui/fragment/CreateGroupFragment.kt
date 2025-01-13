@@ -90,14 +90,14 @@ class CreateGroupFragment : Fragment() {
                 if (groupName.isNotEmpty()) {
                     // 'createdBy' parametresini ekliyoruz
                     viewModel.createGroup(email, name, groupName, note, budget, selectedDateString, userId)
-                    Snackbar.make(binding.root, "Group Created Successfully", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.root, getString(R.string.group_created_successfully), Snackbar.LENGTH_LONG).show()
                     findNavController().navigate(R.id.action_createGroupFragment_to_homeFragment)
                 } else {
-                    Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.root, getString(R.string.error_fill_all_fields), Snackbar.LENGTH_LONG).show()
                 }
             }
         }.addOnFailureListener {
-            Snackbar.make(binding.root, "Failed to fetch user data", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, getString(R.string.failed_to_fetch_user_data), Snackbar.LENGTH_LONG).show()
         }
     }
 

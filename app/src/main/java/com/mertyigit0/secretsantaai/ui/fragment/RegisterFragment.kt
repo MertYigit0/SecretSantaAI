@@ -39,23 +39,25 @@ class RegisterFragment : Fragment() {
             val username = binding.userNameEditText.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.fill_in_all_fields), Toast.LENGTH_SHORT).show()
             } else if (password != confirmPassword) {
-                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.passwords_do_not_match), Toast.LENGTH_SHORT).show()
             } else {
                 registerViewModel.register(email, password, username)
             }
+
         }
 
         registerViewModel.registerStatus.observe(viewLifecycleOwner) { result ->
             when {
                 result.isSuccess -> {
-                    Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
                 }
                 result.isFailure -> {
-                    Toast.makeText(requireContext(), "Registration failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.registration_failed, result.exceptionOrNull()?.message), Toast.LENGTH_SHORT).show()
                 }
+
             }
         }
 

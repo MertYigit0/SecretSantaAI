@@ -40,11 +40,13 @@ class JoinGroupFragment : Fragment() {
 
         joinGroupViewModel.joinGroupResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
-                Toast.makeText(requireContext(), "Successfully joined the group", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.group_join_success), Toast.LENGTH_SHORT).show()
             }
+
             result.onFailure {
-                Toast.makeText(requireContext(), "Failed to join the group: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.group_join_failure, it.message), Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 
@@ -64,7 +66,8 @@ class JoinGroupFragment : Fragment() {
                 joinGroupViewModel.joinGroup(groupId)
                 dialog.dismiss()
             } else {
-                Toast.makeText(requireContext(), "Please enter a valid Group ID", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.valid_group_id_required), Toast.LENGTH_SHORT).show()
+
             }
         }
 

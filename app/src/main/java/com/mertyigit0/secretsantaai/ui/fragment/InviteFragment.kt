@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
+import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.data.model.Group
 import com.mertyigit0.secretsantaai.databinding.FragmentInviteBinding
 import com.mertyigit0.secretsantaai.ui.adapter.GroupAdapter
@@ -51,7 +52,8 @@ class InviteFragment : Fragment() {
         if (userId != null) {
             inviteViewModel.loadUserGroups(userId)
         } else {
-            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.user_not_logged_in), Toast.LENGTH_SHORT).show()
+
         }
 
         inviteViewModel.userGroups.observe(viewLifecycleOwner) { groups ->
@@ -66,7 +68,8 @@ class InviteFragment : Fragment() {
             selectedGroup?.let { group ->
                 generateQrCode(group) // QR kodunu yalnızca butona basıldığında üret
             } ?: run {
-                Toast.makeText(requireContext(), "Please select a group", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.please_select_group), Toast.LENGTH_SHORT).show()
+
             }
         }
     }
@@ -92,9 +95,9 @@ class InviteFragment : Fragment() {
             }
 
             binding.qrCodeImageView.setImageBitmap(bitmap)
-            Toast.makeText(requireContext(), "QR Code for ${group.groupName} generated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.qr_code_generated, group.groupName), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error generating QR code", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.error_generating_qr_code), Toast.LENGTH_SHORT).show()
         }
     }
 

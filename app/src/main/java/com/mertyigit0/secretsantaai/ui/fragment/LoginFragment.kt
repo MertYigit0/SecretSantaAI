@@ -53,7 +53,8 @@ class LoginFragment : Fragment() {
             val password = binding.editTextPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.fill_in_all_fields), Toast.LENGTH_SHORT).show()
+
             } else {
                 loginViewModel.login(email, password)
             }
@@ -64,15 +65,17 @@ class LoginFragment : Fragment() {
         loginViewModel.loginStatus.observe(viewLifecycleOwner) { result ->
             when {
                 result.isSuccess -> {
-                    Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.login_success), Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
                 result.isFailure -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Login failed: ${result.exceptionOrNull()?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    result.exceptionOrNull()?.let {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.login_failed, it.message),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }

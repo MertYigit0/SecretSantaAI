@@ -35,12 +35,13 @@ class TabFragment : Fragment() {
         // Tab isimlerini ve sıralarını belirtiyoruz
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
-                0 -> "Join Group" // İlk fragment
-                1 -> "Invite"     // İkinci fragment
-                else -> "Tab ${position + 1}" // Diğer fragmentler
+                0 -> getString(R.string.join_group_tab)  // İlk fragment
+                1 -> getString(R.string.invite_tab)     // İkinci fragment
+                else -> getString(R.string.tab_default, position + 1)  // Diğer fragmentler
             }
         }.attach()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

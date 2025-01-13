@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentAiHelpBinding
 import com.mertyigit0.secretsantaai.viewmodels.AiHelpViewModel
 
@@ -44,7 +45,8 @@ class AiHelpFragment : Fragment() {
                 val action = AiHelpFragmentDirections.actionAiHelpFragmentToAiResultFragment()
                 findNavController().navigate(action)
             } else {
-                Toast.makeText(context, "Lütfen tüm alanları doldurun", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_fill_all_fields), Toast.LENGTH_SHORT).show()
+
             }
         }
 
