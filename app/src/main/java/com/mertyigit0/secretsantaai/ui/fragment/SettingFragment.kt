@@ -34,7 +34,48 @@ class SettingFragment : Fragment() {
         binding.buttonLogout.setOnClickListener {
             showCustomLogoutDialog()
         }
+
+        binding.textLanguageRegion.setOnClickListener {
+            showLanguageSelectionDialog()
+        }
     }
+
+
+    private fun showLanguageSelectionDialog() {
+        // Dialog için layout'u inflate et
+        val dialogView = layoutInflater.inflate(R.layout.dialog_change_language_custom, null)
+
+        // Dialog oluştur
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // RadioGroup'dan seçilen dil bilgisini al
+        val rgLanguage = dialogView.findViewById<android.widget.RadioGroup>(R.id.rgLanguage)
+        val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogSave)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogCancel)
+
+        // Save butonuna tıklandığında seçilen dili işleme
+        btnSave.setOnClickListener {
+            val selectedLanguageId = rgLanguage.checkedRadioButtonId
+            if (selectedLanguageId != -1) {
+                val selectedLanguage = dialogView.findViewById<android.widget.RadioButton>(selectedLanguageId).text
+                // Burada, seçilen dili işleyebilirsin. Örneğin:
+                // Toast.makeText(context, "Selected Language: $selectedLanguage", Toast.LENGTH_SHORT).show()
+            }
+            dialog.dismiss()
+        }
+
+        // Cancel butonuna tıklandığında dialog'u kapat
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // Dialog'u göster
+        dialog.show()
+    }
+
 
     private fun showCustomLogoutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_logout_custom, null)
