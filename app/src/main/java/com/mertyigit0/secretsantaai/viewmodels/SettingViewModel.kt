@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mertyigit0.secretsantaai.data.repository.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +16,8 @@ class SettingViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
-
+    // Language flow
+    val languageFlow: Flow<String> = dataStoreManager.languageFlow
 
     fun saveLanguagePreference(languageCode: String) {
         viewModelScope.launch {

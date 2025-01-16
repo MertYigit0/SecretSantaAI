@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentSettingBinding
 import com.mertyigit0.secretsantaai.viewmodels.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -41,7 +43,6 @@ class SettingFragment : Fragment() {
         }
     }
 
-
     private fun showLanguageSelectionDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_change_language_custom, null)
         val dialog = MaterialAlertDialogBuilder(requireContext())
@@ -52,6 +53,18 @@ class SettingFragment : Fragment() {
         val rgLanguage = dialogView.findViewById<android.widget.RadioGroup>(R.id.rgLanguage)
         val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogSave)
         val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogCancel)
+
+        // languageFlow'u gözlemlemek
+        lifecycleScope.launchWhenStarted {
+            settingViewModel.languageFlow.collect { currentLanguage ->
+                // Dil bilgisini kontrol et ve uygun RadioButton'ı işaretle
+                when (currentLanguage) {
+                    "en" -> rgLanguage.check(R.id.rbEnglish)  // English radio button
+                    "tr" -> rgLanguage.check(R.id.rbTurkish) // Turkish radio button
+                    else -> rgLanguage.check(R.id.rbEnglish)  // Varsayılan dil
+                }
+            }
+        }
 
         btnSave.setOnClickListener {
             val selectedLanguageId = rgLanguage.checkedRadioButtonId
@@ -87,7 +100,6 @@ class SettingFragment : Fragment() {
         requireContext().createConfigurationContext(config)
         activity?.recreate() // UI yeniden yaratılıyor
     }
-
 
     private fun showCustomLogoutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_logout_custom, null)
