@@ -27,7 +27,7 @@
             android:id="@+id/editTextGroupName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter group name"
+            android:hint="@string/enter_group_name"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,7 +36,7 @@
         android:id="@+id/textViewBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Budget"
+        android:text="@string/budget"
         android:layout_marginBottom="8dp"/>
 
     <SeekBar
@@ -61,7 +61,7 @@
         android:id="@+id/switchDatePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Date"
+        android:text="@string/select_date"
         android:layout_marginBottom="16dp" />
 
     <!-- Date Picker is now hidden and will be replaced with a DatePickerDialog -->
@@ -81,7 +81,7 @@
             android:id="@+id/editTextNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter a note"
+            android:hint="@string/enter_a_note"
             android:inputType="textMultiLine" />
     </com.google.android.material.textfield.TextInputLayout>
 

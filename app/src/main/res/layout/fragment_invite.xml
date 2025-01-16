@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:padding="16dp"
-        android:text="Select a Group to Generate QR"
+        android:text="@string/select_a_group_to_generate_qr"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

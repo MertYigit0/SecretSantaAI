@@ -32,7 +32,7 @@
         android:id="@+id/giftReceiverTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You will give a gift to ..."
+        android:text="@string/you_will_give_a_gift_to"
         android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

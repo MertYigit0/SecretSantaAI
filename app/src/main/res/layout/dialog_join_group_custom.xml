@@ -20,7 +20,7 @@
             android:id="@+id/tvDialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Join Group"
+            android:text="@string/join_group"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="24sp"
@@ -47,7 +47,7 @@
                 android:id="@+id/etGroupId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Group ID"
+                android:hint="@string/group_id"
                 android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +57,7 @@
             android:id="@+id/btnDialogCancel"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textSize="14sp"
             android:backgroundTint="@color/white"
             app:strokeColor="@color/on_surface"
@@ -76,7 +76,7 @@
             android:id="@+id/btnDialogJoin"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Join"
+            android:text="@string/join"
             android:textSize="14sp"
             android:backgroundTint="@color/primary_light"
             android:textColor="@color/white"

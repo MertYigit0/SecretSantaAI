@@ -19,7 +19,7 @@
         android:id="@+id/emptyStateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You have not joined any groups"
+        android:text="@string/you_have_not_joined_any_groups"
         android:textSize="18sp"
         android:visibility="gone"
         android:layout_marginBottom="16dp"

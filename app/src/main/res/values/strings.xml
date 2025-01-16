@@ -73,6 +73,37 @@
     <string name="participants_count">%1$d Participants</string>
     <string name="no_date_set">No Date Set</string>
     <string name="save">Save</string>
+    <string name="select_language">Select Language</string>
+    <string name="cancel">Cancel</string>
+    <string name="group_id">Group ID</string>
+    <string name="join">Join</string>
+    <string name="confirm_logout">Confirm Logout</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="looks_like_your_favorites_screen_is_empty_the_gift_recommendations_you_add_to_favorites_will_appear_here">Looks like your favorites screen is empty. The gift recommendations you add to favorites will appear here.</string>
+    <string name="ai_gift_suggestions">AI Gift Suggestions</string>
+    <string name="fill_in_the_details_below_for_personalized_gift_suggestions">Fill in the details below for personalized gift suggestions</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="special_occasion">Special Occasion</string>
+    <string name="interests">Interests</string>
+    <string name="books_technology_sports_etc">Books, technology, sports, etc.</string>
+    <string name="budget">Budget</string>
+    <string name="get_gift_suggestions_from_ai">Get Gift Suggestions from AI</string>
+    <string name="enter_group_name">Enter group name</string>
+    <string name="select_date">Select Date</string>
+    <string name="enter_a_note">Enter a note</string>
+    <string name="you_will_give_a_gift_to">You will give a gift to …</string>
+    <string name="error_message">Error message</string>
+    <string name="you_have_not_joined_any_groups">You have not joined any groups</string>
+    <string name="select_a_group_to_generate_qr">Select a Group to Generate QR</string>
+    <string name="join_a_group_with_invite_code">Join a Group With Invite Code</string>
+    <string name="gift_recommendation">Gift Recommendation</string>
+    <string name="group_name">Group Name</string>
+    <string name="people_count">People Count</string>
+    <string name="date_info">Date Info</string>
 
 
     <string-array name="special_occasions">

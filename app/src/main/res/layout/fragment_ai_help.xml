@@ -14,7 +14,7 @@
         android:id="@+id/mainTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AI Gift Suggestions"
+        android:text="@string/ai_gift_suggestions"
         android:layout_gravity="center"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Fill in the details below for personalized gift suggestions"
+        android:text="@string/fill_in_the_details_below_for_personalized_gift_suggestions"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
 
@@ -35,7 +35,7 @@
         android:id="@+id/ageLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Age"
+        android:text="@string/age"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="Age"/>
+            android:hint="@string/age"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Gender Selection -->
@@ -56,7 +56,7 @@
         android:id="@+id/genderLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gender"
+        android:text="@string/gender"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -71,19 +71,19 @@
             android:id="@+id/maleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Male" />
+            android:text="@string/male" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/femaleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Female" />
+            android:text="@string/female" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/otherRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Other" />
+            android:text="@string/other" />
     </RadioGroup>
 
     <!-- Special Occasion Selection -->
@@ -91,7 +91,7 @@
         android:id="@+id/occasionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Special Occasion"
+        android:text="@string/special_occasion"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -113,7 +113,7 @@
         android:id="@+id/interestsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Interests"
+        android:text="@string/interests"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -125,7 +125,7 @@
             android:id="@+id/interestsEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Books, technology, sports, etc."/>
+            android:hint="@string/books_technology_sports_etc"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Budget -->
@@ -133,7 +133,7 @@
         android:id="@+id/budgetLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Budget"
+        android:text="@string/budget"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
@@ -146,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:hint="Budget"/>
+            android:hint="@string/budget"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- AI Gift Suggestion Button -->
@@ -156,7 +156,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary_yellow"
         android:textColor="@color/black"
-        android:text="Get Gift Suggestions from AI"
+        android:text="@string/get_gift_suggestions_from_ai"
         android:layout_marginTop="16dp"/>
 
 </LinearLayout>

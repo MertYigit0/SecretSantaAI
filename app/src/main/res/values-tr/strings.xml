@@ -74,6 +74,39 @@
     <string name="no_date_set">Tarih Belirlenmemiş</string>
     <string name="save">Kaydet</string>
 
+    <string name="select_language">Dil Seçin</string>
+    <string name="cancel">İptal</string>
+    <string name="group_id">Grup ID</string>
+    <string name="join">Katıl</string>
+    <string name="confirm_logout">Çıkış Yapmayı Onayla</string>
+    <string name="are_you_sure_you_want_to_logout">Çıkış yapmak istediğinizden emin misiniz?</string>
+    <string name="looks_like_your_favorites_screen_is_empty_the_gift_recommendations_you_add_to_favorites_will_appear_here">Favoriler ekranınız boş görünüyor. Favorilere eklediğiniz hediye önerileri burada görünecektir.</string>
+    <string name="ai_gift_suggestions">Yapay Zeka Hediye Önerileri</string>
+    <string name="fill_in_the_details_below_for_personalized_gift_suggestions">Kişiselleştirilmiş hediye önerileri için aşağıdaki bilgileri doldurun</string>
+    <string name="age">Yaş</string>
+    <string name="gender">Cinsiyet</string>
+    <string name="male">Erkek</string>
+    <string name="female">Kadın</string>
+    <string name="other">Diğer</string>
+    <string name="special_occasion">Özel Gün</string>
+    <string name="interests">İlgi Alanları</string>
+    <string name="books_technology_sports_etc">Kitaplar, teknoloji, spor vb.</string>
+    <string name="budget">Bütçe</string>
+    <string name="get_gift_suggestions_from_ai">Yapay Zeka’dan Hediye Önerileri Al</string>
+    <string name="enter_group_name">Grup adı girin</string>
+    <string name="select_date">Tarih Seçin</string>
+    <string name="enter_a_note">Bir not girin</string>
+    <string name="you_will_give_a_gift_to">Hediye vereceğiniz kişi …</string>
+    <string name="error_message">Hata mesajı</string>
+    <string name="you_have_not_joined_any_groups">Henüz hiçbir gruba katılmadınız</string>
+    <string name="select_a_group_to_generate_qr">QR oluşturmak için bir grup seçin</string>
+    <string name="join_a_group_with_invite_code">Davet Kodu ile Gruba Katıl</string>
+    <string name="gift_recommendation">Hediye Önerisi</string>
+    <string name="group_name">Grup Adı</string>
+    <string name="people_count">Kişi Sayısı</string>
+    <string name="date_info">Tarih Bilgisi</string>
+
+
 
 
 

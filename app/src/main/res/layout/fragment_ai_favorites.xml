@@ -39,7 +39,7 @@
         android:layout_height="59dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Looks like your favorites screen is empty. The gift recommendations you add to favorites will appear here."
+        android:text="@string/looks_like_your_favorites_screen_is_empty_the_gift_recommendations_you_add_to_favorites_will_appear_here"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:visibility="gone"
