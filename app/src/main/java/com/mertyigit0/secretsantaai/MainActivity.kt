@@ -11,15 +11,20 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.mertyigit0.secretsantaai.data.repository.DataStoreManager
 import com.mertyigit0.secretsantaai.databinding.ActivityMainBinding
 import com.mertyigit0.secretsantaai.ui.fragment.HomeFragment
 import com.mertyigit0.secretsantaai.ui.fragment.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -29,20 +34,26 @@ class MainActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
+    @Inject
+    lateinit var dataStoreManager: DataStoreManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            dataStoreManager.languageFlow.collect { languageCode ->
+                updateLocale(languageCode)
+                navigateUserBasedOnAuth(auth, navController)
+            }
+        }
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Bottom Navigation'ı ilk başta ayarla
         setupBottomNav()
 
-        // Kullanıcı zaten giriş yaptıysa, HomeFragment'ı aç
-        if (auth.currentUser != null) {
-            navController.navigate(R.id.homeFragment) // Burada direkt olarak NavController kullanabilirsiniz
-        } else {
-            navController.navigate(R.id.loginFragment) // Burada da NavController kullanarak geçiş yapabilirsiniz
-        }
 
         // **Launcher burada tanımlanıyor (onCreate'in başında)**
         requestPermissionLauncher = registerForActivityResult(
@@ -89,6 +100,23 @@ class MainActivity : AppCompatActivity() {
             rootView.getWindowVisibleDisplayFrame(rect)
         }
     }
+
+    private fun updateLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+    }
+
+    fun navigateUserBasedOnAuth(auth: FirebaseAuth, navController: NavController) {
+        if (auth.currentUser != null) {
+            navController.navigate(R.id.homeFragment)
+        } else {
+            navController.navigate(R.id.loginFragment)
+        }
+    }
+
 
     private fun setupBottomNav() {
         navHostFragment =

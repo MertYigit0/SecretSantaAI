@@ -12,6 +12,7 @@ import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.FragmentSettingBinding
 import com.mertyigit0.secretsantaai.viewmodels.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class SettingFragment : Fragment() {
@@ -42,38 +43,49 @@ class SettingFragment : Fragment() {
 
 
     private fun showLanguageSelectionDialog() {
-        // Dialog için layout'u inflate et
         val dialogView = layoutInflater.inflate(R.layout.dialog_change_language_custom, null)
-
-        // Dialog oluştur
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
             .setCancelable(true)
             .create()
 
-        // RadioGroup'dan seçilen dil bilgisini al
         val rgLanguage = dialogView.findViewById<android.widget.RadioGroup>(R.id.rgLanguage)
         val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogSave)
         val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogCancel)
 
-        // Save butonuna tıklandığında seçilen dili işleme
         btnSave.setOnClickListener {
             val selectedLanguageId = rgLanguage.checkedRadioButtonId
             if (selectedLanguageId != -1) {
-                val selectedLanguage = dialogView.findViewById<android.widget.RadioButton>(selectedLanguageId).text
-                // Burada, seçilen dili işleyebilirsin. Örneğin:
-                // Toast.makeText(context, "Selected Language: $selectedLanguage", Toast.LENGTH_SHORT).show()
+                val selectedLanguage = dialogView.findViewById<android.widget.RadioButton>(selectedLanguageId).text.toString()
+
+                // Seçilen dili kaydet ve uygula
+                val locale = when (selectedLanguage) {
+                    "English" -> "en"
+                    "Türkçe" -> "tr"
+                    else -> "en"
+                }
+
+                settingViewModel.saveLanguagePreference(locale)
+                updateLocale(locale)
             }
             dialog.dismiss()
         }
 
-        // Cancel butonuna tıklandığında dialog'u kapat
         btnCancel.setOnClickListener {
             dialog.dismiss()
         }
 
-        // Dialog'u göster
         dialog.show()
+    }
+
+    // Locale güncelleme fonksiyonu
+    private fun updateLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = requireContext().resources.configuration
+        config.setLocale(locale)
+        requireContext().createConfigurationContext(config)
+        activity?.recreate() // UI yeniden yaratılıyor
     }
 
 
