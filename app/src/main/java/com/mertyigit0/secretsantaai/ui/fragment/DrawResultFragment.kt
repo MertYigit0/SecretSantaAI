@@ -40,16 +40,13 @@ class DrawResultFragment : Fragment() {
         val userId = auth.currentUser?.uid ?: return
 
         // Butona tıklama olayını dinleyin
-        binding.startAnimationButton.setOnClickListener {
+
             // Lottie animasyonu başlat
             val lottieAnimationView: LottieAnimationView = binding.lottieAnimationView
             lottieAnimationView.playAnimation()
 
-            // 239 milisaniye sonra animasyonu durdur
-            handler.postDelayed({
-                lottieAnimationView.cancelAnimation()
-            }, 239) // 239 milisaniye sonra animasyonu durdur
-        }
+
+
 
         // Çekiliş sonuçlarını çek
         drawResultViewModel.fetchDrawResult(userId, groupId)

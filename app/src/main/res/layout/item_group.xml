@@ -63,7 +63,7 @@
             android:id="@+id/checkIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/baseline_access_time_24"
             app:layout_constraintStart_toEndOf="@id/dateTextView"
             app:layout_constraintTop_toTopOf="@id/dateTextView" />
