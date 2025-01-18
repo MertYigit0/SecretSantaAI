@@ -29,18 +29,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-
-            <service
-                android:name=".utils.RaffleNotificationSender"
-                android:exported="true">
-                <intent-filter>
-                    <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-                </intent-filter>
-            </service>
-
-
-
-
     </application>
 
 </manifest>
