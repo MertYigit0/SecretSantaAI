@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -80,12 +79,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        // **Android 13 ve üzeri için izin kontrolü**
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            checkNotificationPermission()
-        }
-
 
         // **Android 13 ve üzeri için izin kontrolü**
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
