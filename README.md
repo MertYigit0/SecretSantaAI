@@ -20,7 +20,6 @@ SecretSantaAI allows users to create groups and organize secret gift exchanges. 
 | Hilt | 2.51.1 |  
 | Coroutines Core | 1.8.0 |  
 | Material | 1.12.0 |  
-| Activity | 1.9.3 |  
 | Navigation UI KTX | 2.8.5 |  
 | Retrofit | 2.11.0 |  
 | Firebase Auth KTX | 23.1.0 |  
