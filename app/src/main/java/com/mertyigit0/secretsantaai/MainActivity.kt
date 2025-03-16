@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,7 @@ import com.mertyigit0.secretsantaai.data.repository.DataStoreManager
 import com.mertyigit0.secretsantaai.databinding.ActivityMainBinding
 import com.mertyigit0.secretsantaai.ui.fragment.HomeFragment
 import com.mertyigit0.secretsantaai.ui.fragment.LoginFragment
+import com.mertyigit0.secretsantaai.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -29,68 +31,50 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private val auth = FirebaseAuth.getInstance()
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     @Inject
-    lateinit var dataStoreManager: DataStoreManager
+    lateinit var auth: FirebaseAuth
+
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            dataStoreManager.languageFlow.collect { languageCode ->
-                updateLocale(languageCode)
-                navigateUserBasedOnAuth(auth, navController)
-            }
-        }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Bottom Navigation'ı ilk başta ayarla
-        setupBottomNav()
+        setupNavController()
 
-
-        // **Launcher burada tanımlanıyor (onCreate'in başında)**
-        requestPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Toast.makeText(this, "Bildirim izni verildi.", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Bildirim izni verilmedi.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Status Bar Rengi
         window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
 
-        // Destination değişimlerini dinle
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.loginFragment, R.id.registerFragment -> {
-                    binding.bottomNavigationView.visibility = View.GONE
-                }
-                else -> {
-                    binding.bottomNavigationView.visibility = View.VISIBLE
-                }
-            }
-        }
+        // **Dil değişikliklerini ve oturum durumunu gözlemle**
+        observeViewModel()
 
-        // **Android 13 ve üzeri için izin kontrolü**
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            checkNotificationPermission()
+        setupNotificationPermission()
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomNavigationView.visibility =
+                if (destination.id in listOf(R.id.loginFragment, R.id.registerFragment)) View.GONE else View.VISIBLE
         }
     }
 
-    private fun hideOrShowBottomNav() {
-        val rootView = findViewById<View>(android.R.id.content)
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = Rect()
-            rootView.getWindowVisibleDisplayFrame(rect)
+    private fun setupNavController() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHostFragment.navController
+        binding.bottomNavigationView.setupWithNavController(navController)
+    }
+
+    private fun observeViewModel() {
+        viewModel.languageCode.observe(this) { languageCode ->
+            updateLocale(languageCode)
+        }
+
+        viewModel.isUserAuthenticated.observe(this) { isAuthenticated ->
+            val destination = if (isAuthenticated) R.id.homeFragment else R.id.loginFragment
+            navController.navigate(destination)
         }
     }
 
@@ -102,32 +86,19 @@ class MainActivity : AppCompatActivity() {
         resources.updateConfiguration(config, resources.displayMetrics)
     }
 
-    fun navigateUserBasedOnAuth(auth: FirebaseAuth, navController: NavController) {
-        if (auth.currentUser != null) {
-            navController.navigate(R.id.homeFragment)
-        } else {
-            navController.navigate(R.id.loginFragment)
+    private fun setupNotificationPermission() {
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            val message = if (isGranted) "Bildirim izni verildi." else "Bildirim izni reddedildi."
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
-    }
 
-
-    private fun setupBottomNav() {
-        navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        navController = navHostFragment.navController
-        binding.bottomNavigationView.setupWithNavController(navController)
-    }
-
-    private fun checkNotificationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
-            // İzin zaten verilmiş
-        } else {
-            // İzin iste
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 }
+
