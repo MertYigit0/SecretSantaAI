@@ -28,8 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var groupAdapter: GroupAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -38,30 +37,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Bildirim iznini kontrol et ve isteniyorsa iste
+        setupRecyclerView()
+        setupObservers()
+        setupClickListeners()
+    }
 
+    private fun setupRecyclerView() {
         groupAdapter = GroupAdapter()
-        binding.recyclerViewGroups.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewGroups.adapter = groupAdapter
-
-        // Yükleme göstergesini görünür yap
-        binding.loadingProgressBar.visibility = View.VISIBLE
-
-        // Tıklama olayını ekliyoruz
-        groupAdapter.setOnItemClickListener { group ->
-            val action = HomeFragmentDirections.actionHomeFragmentToGroupDetailFragment(group.groupId)
-            findNavController().navigate(action)
+        binding.recyclerViewGroups.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = groupAdapter
         }
+    }
 
-        binding.btnCreateGroup.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
-        }
-
-        // Grupları gözlemliyoruz
+    private fun setupObservers() {
         homeViewModel.groups.observe(viewLifecycleOwner) { groups ->
-            // Yükleme göstergesini gizle
             binding.loadingProgressBar.visibility = View.GONE
-
             if (groups.isEmpty()) {
                 binding.emptyStateText.visibility = View.VISIBLE
             } else {
@@ -71,10 +62,15 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
-
-
+    private fun setupClickListeners() {
+        groupAdapter.setOnItemClickListener { group ->
+            val action = HomeFragmentDirections.actionHomeFragmentToGroupDetailFragment(group.groupId)
+            findNavController().navigate(action)
+        }
+        binding.btnCreateGroup.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_createGroupFragment)
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
