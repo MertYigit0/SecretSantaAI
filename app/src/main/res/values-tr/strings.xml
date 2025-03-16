@@ -107,7 +107,24 @@
     <string name="date_info">Tarih Bilgisi</string>
 
 
-
+    <string name="gift_prompt">
+    Yaş: %1$s
+    Cinsiyet: %2$s
+    Özel Gün: %3$s
+    İlgi Alanları: %4$s
+    Bütçe: %5$s
+    Lütfen aşağıdaki formatta tam olarak 10 adet hediye önerisi sunun. Her öneri kısa ve öz bir cümle olmalı ve sadece hediye önerisi içermelidir. Başka hiçbir açıklama veya metin eklemeyin.
+    1. [Hediye Önerisi 1]
+    2. [Hediye Önerisi 2]
+    3. [Hediye Önerisi 3]
+    4. [Hediye Önerisi 4]
+    5. [Hediye Önerisi 5]
+    6. [Hediye Önerisi 6]
+    7. [Hediye Önerisi 7]
+    8. [Hediye Önerisi 8]
+    9. [Hediye Önerisi 9]
+    10. [Hediye Önerisi 10]
+    </string>
 
 
     <string-array name="special_occasions">

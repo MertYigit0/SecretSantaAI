@@ -30,26 +30,32 @@ class AiHelpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Submit butonuna tıklama işlemi
+        // Submit button click listener
         binding.submitButton.setOnClickListener {
             val age = binding.ageEditText.text.toString()
-            val gender = getSelectedGender()  // Seçilen cinsiyet
+            val gender = getSelectedGender() // Selected gender
             val occasion = binding.occasionSpinner.selectedItem.toString()
             val interests = binding.interestsEditText.text.toString()
             val budget = binding.budgetEditText.text.toString()
 
             if (age.isNotEmpty() && gender.isNotEmpty() && occasion.isNotEmpty()) {
-                aiHelpViewModel.getGiftRecommendation(age, gender, occasion, interests, budget)
+                // Pass context to the ViewModel function
+                aiHelpViewModel.getGiftRecommendation(
+                    age,
+                    gender,
+                    occasion,
+                    interests,
+                    budget,
+                    requireContext() // Pass the context here
+                )
 
-                // AiResultFragment'e geçiş yapılıyor
+                // Navigate to AiResultFragment
                 val action = AiHelpFragmentDirections.actionAiHelpFragmentToAiResultFragment()
                 findNavController().navigate(action)
             } else {
                 Toast.makeText(context, getString(R.string.error_fill_all_fields), Toast.LENGTH_SHORT).show()
-
             }
         }
-
     }
 
     // Cinsiyeti al

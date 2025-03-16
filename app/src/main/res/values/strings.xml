@@ -106,6 +106,25 @@
     <string name="date_info">Date Info</string>
 
 
+    <string name="gift_prompt">
+    Age: %1$s
+    Gender: %2$s
+    Occasion: %3$s
+    Interests: %4$s
+    Budget: %5$s
+    Please provide exactly 10 gift suggestions in the format below. Each suggestion should be a concise sentence containing only the gift suggestion. Do not add any other explanation or text.
+    1. [Gift Suggestion 1]
+    2. [Gift Suggestion 2]
+    3. [Gift Suggestion 3]
+    4. [Gift Suggestion 4]
+    5. [Gift Suggestion 5]
+    6. [Gift Suggestion 6]
+    7. [Gift Suggestion 7]
+    8. [Gift Suggestion 8]
+    9. [Gift Suggestion 9]
+    10. [Gift Suggestion 10]
+</string>
+
     <string-array name="special_occasions">
         <item>Birthday</item>
         <item>Christmas</item>
