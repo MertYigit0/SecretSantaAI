@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mertyigit0.secretsantaai.R
+import com.mertyigit0.secretsantaai.data.model.Group
 import com.mertyigit0.secretsantaai.data.model.User
 import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
@@ -24,11 +25,9 @@ class GroupDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
     private lateinit var userAdapter: UserAdapter
-    private lateinit var currentUser: User
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGroupDetailBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,112 +35,101 @@ class GroupDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val groupId = arguments?.getString("groupId") ?: return
-        groupDetailViewModel.getGroupDetails(groupId)
 
+        setupRecyclerView()
+        observeGroupDetails(groupId)
+    }
+
+    private fun setupRecyclerView() {
         userAdapter = UserAdapter(emptyList())
         binding.membersRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = userAdapter
         }
-
-        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
-            group?.let { nonNullGroup ->
-                binding.groupName.text = nonNullGroup.groupName
-                userAdapter.updateUsers(nonNullGroup.users)
-
-                // Mevcut kullanıcıyı al
-                val currentUser = nonNullGroup.users.find { it.userId == FirebaseAuth.getInstance().currentUser?.uid } ?: return@let
-
-                // Eğer grup üyesi değilse buton metnini değiştir
-                if (!nonNullGroup.users.contains(currentUser)) {
-                    binding.drawRaffleButton.text = getString(R.string.group_not_member)
-                    binding.drawRaffleButton.isEnabled = false
-                } else {
-                    // Çekiliş yapılacak butonun tıklama işlemi
-                    val isDrawn = nonNullGroup.drawResults.isNotEmpty()
-                    var buttonText = if (isDrawn) {
-                        getString(R.string.show_result)
-                    } else {
-                        // Eğer grup kurucusu değilseniz, buton "Yönetici Bekleniyor" yazsın
-                        if (currentUser.userId != nonNullGroup.createdBy) {
-                            binding.drawRaffleButton.text = getString(R.string.waiting_for_admin)
-                            binding.drawRaffleButton.isEnabled = false
-                            return@let
-                        } else {
-                            getString(R.string.draw_raffle)
-                        }
-                    }
-
-                    // Çekilişi başlatma
-                    binding.drawRaffleButton.text = buttonText
-                    binding.drawRaffleButton.isEnabled = true
-
-                    binding.drawRaffleButton.setOnClickListener {
-                        if (isDrawn) {
-                            // Çekiliş sonucu gösterme
-                            findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
-                                putString("groupId", nonNullGroup.groupId)
-                            })
-                        } else {
-                            // Çekilişi başlat
-                            performDraw(nonNullGroup.users, nonNullGroup.groupId)
-                        }
-                    }
-                }
-
-                // Grup üyelerinin sayısı 3'ten azsa çekilişi başlatma
-                if (nonNullGroup.users.size < 3) {
-                    binding.drawRaffleButton.text = getString(R.string.minimum_three_members)
-                    binding.drawRaffleButton.isEnabled = false
-                }
-            }
-        }
-
     }
 
+    private fun observeGroupDetails(groupId: String) {
+        groupDetailViewModel.getGroupDetails(groupId)
+        groupDetailViewModel.groupDetails.observe(viewLifecycleOwner) { group ->
+            group?.let { updateUI(it) }
+        }
+    }
+
+    private fun updateUI(group: Group) {
+        binding.groupName.text = group.groupName
+        userAdapter.updateUsers(group.users)
+
+        val currentUser = group.users.find { it.userId == FirebaseAuth.getInstance().currentUser?.uid }
+        if (currentUser == null || group.users.size < 3) {
+            disableRaffleButton(R.string.minimum_three_members)
+            return
+        }
+
+        setupRaffleButton(group, currentUser)
+    }
+
+    private fun setupRaffleButton(group: Group, currentUser: User) {
+        val isDrawn = group.drawResults.isNotEmpty()
+        val buttonText = when {
+            !group.users.contains(currentUser) -> R.string.group_not_member
+            isDrawn -> R.string.show_result
+            currentUser.userId != group.createdBy -> R.string.waiting_for_admin
+            else -> R.string.draw_raffle
+        }
+
+        binding.drawRaffleButton.apply {
+            text = getString(buttonText)
+            isEnabled = buttonText == R.string.draw_raffle || isDrawn
+            setOnClickListener {
+                if (isDrawn) showDrawResult(group.groupId) else performDraw(group.users, group.groupId)
+            }
+        }
+    }
+
+    private fun disableRaffleButton(messageResId: Int) {
+        binding.drawRaffleButton.apply {
+            text = getString(messageResId)
+            isEnabled = false
+        }
+    }
+
+    private fun showDrawResult(groupId: String) {
+        findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
+            putString("groupId", groupId)
+        })
+    }
 
     private fun performDraw(users: List<User>, groupId: String) {
         val userIds = users.map { it.userId }
         val shuffledUserIds = userIds.shuffled()
-
-        // Çekilişi yap
         val drawResults = mutableMapOf<String, String>()
         val usedRecipients = mutableSetOf<String>()
 
-        for (i in userIds.indices) {
-            val giverId = userIds[i]
+        userIds.forEachIndexed { i, giverId ->
             var recipientId: String
-
-            // Random bir alıcı seç, ancak aynı kişiden hediye almasını engelle
             do {
                 recipientId = shuffledUserIds[(i + 1) % userIds.size]
             } while (usedRecipients.contains(recipientId) || recipientId == giverId)
 
-            // Sonuçları haritaya ekle ve alıcıyı "kullanılmış" olarak işaretle
             drawResults[giverId] = recipientId
             usedRecipients.add(recipientId)
         }
 
-        // Çekiliş sonuçlarını Firestore'a kaydet
+        saveDrawResults(groupId, drawResults)
+    }
+
+    private fun saveDrawResults(groupId: String, drawResults: Map<String, String>) {
         FirebaseFirestore.getInstance().collection("groups")
             .document(groupId)
             .update("drawResults", drawResults)
             .addOnSuccessListener {
-                // Çekiliş tamamlandıktan sonra bildirim gönder
-
-                // Çekiliş tamamlandıktan sonra sonucu göster
-                findNavController().navigate(R.id.action_groupDetailFragment_to_drawResultFragment, Bundle().apply {
-                    putString("groupId", groupId)
-                })
+                showDrawResult(groupId)
             }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
