@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mertyigit0.secretsantaai.R
 import com.mertyigit0.secretsantaai.databinding.ItemGiftRecommendationBinding
 
+// AiResultAdapter.kt
 class AiResultAdapter(
     private val recommendations: List<String>,
-    private val onFavoriteClick: (String) -> Unit // Favoriye ekleme için callback
+    private val onFavoriteClick: (String) -> Unit
 ) : RecyclerView.Adapter<AiResultAdapter.ViewHolder>() {
 
-    private val favoriteItems = mutableSetOf<String>() // Favori öğeleri tutacak set
+    private val favoriteItems = mutableSetOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGiftRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,35 +23,26 @@ class AiResultAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recommendation = recommendations[position]
+        holder.binding.root.visibility = if (recommendation.isEmpty()) View.GONE else View.VISIBLE
+        holder.binding.giftRecommendationText.text = recommendation
 
-        // Boş veri kontrolü
-        if (recommendation.isEmpty()) {
-            holder.binding.root.visibility = View.GONE // Boş ise CardView'i gizle
+        val starIcon = if (favoriteItems.contains(recommendation)) {
+            R.drawable.baseline_star_24
         } else {
-            holder.binding.root.visibility = View.VISIBLE // Veri varsa CardView'i göster
-            holder.binding.giftRecommendationText.text = recommendation
+            R.drawable.baseline_star_border_24
+        }
+        holder.binding.favoriteStar.setImageResource(starIcon)
 
-            // Yıldız simgesinin durumu
-            val starIcon = if (favoriteItems.contains(recommendation)) {
-                R.drawable.baseline_star_24 // Sarı yıldız
+        holder.binding.favoriteStar.setOnClickListener {
+            if (favoriteItems.contains(recommendation)) {
+                favoriteItems.remove(recommendation)
             } else {
-                R.drawable.baseline_star_border_24 // Boş yıldız
+                favoriteItems.add(recommendation)
             }
-            holder.binding.favoriteStar.setImageResource(starIcon)
-
-            // Yıldız tıklama olayını işleyin
-            holder.binding.favoriteStar.setOnClickListener {
-                if (favoriteItems.contains(recommendation)) {
-                    favoriteItems.remove(recommendation)
-                } else {
-                    favoriteItems.add(recommendation)
-                }
-                notifyItemChanged(position)
-                onFavoriteClick(recommendation) // Favorilere ekle
-            }
+            notifyItemChanged(position)
+            onFavoriteClick(recommendation)
         }
     }
-
 
     override fun getItemCount(): Int = recommendations.size
 
