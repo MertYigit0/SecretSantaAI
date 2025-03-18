@@ -19,6 +19,7 @@ import com.mertyigit0.secretsantaai.databinding.FragmentInviteBinding
 import com.mertyigit0.secretsantaai.ui.adapter.GroupAdapter
 import com.mertyigit0.secretsantaai.viewmodels.InviteViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class InviteFragment : Fragment() {
@@ -26,12 +27,10 @@ class InviteFragment : Fragment() {
     private var _binding: FragmentInviteBinding? = null
     private val binding get() = _binding!!
     private val inviteViewModel: InviteViewModel by viewModels()
-
     private val groupAdapter = GroupAdapter()
-
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private var selectedGroup: Group? = null // Seçili grup
+    @Inject
+    lateinit var auth: FirebaseAuth
+    private var selectedGroup: Group? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,62 +42,69 @@ class InviteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        observeViewModel()
+        setupListeners()
+    }
 
-        binding.groupsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+    private fun setupRecyclerView() {
+        binding.groupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.groupsRecyclerView.adapter = groupAdapter
+    }
 
+    private fun observeViewModel() {
         val userId = auth.currentUser?.uid
-
         if (userId != null) {
             inviteViewModel.loadUserGroups(userId)
         } else {
-            Toast.makeText(requireContext(), getString(R.string.user_not_logged_in), Toast.LENGTH_SHORT).show()
-
+            showToast(R.string.user_not_logged_in)
         }
 
         inviteViewModel.userGroups.observe(viewLifecycleOwner) { groups ->
             groupAdapter.submitList(groups)
         }
+    }
 
+    private fun setupListeners() {
         groupAdapter.setOnItemClickListener { group ->
-            selectedGroup = group // Seçili grubu tutuyoruz
+            selectedGroup = group
         }
 
         binding.generateQrButton.setOnClickListener {
             selectedGroup?.let { group ->
-                generateQrCode(group) // QR kodunu yalnızca butona basıldığında üret
-            } ?: run {
-                Toast.makeText(requireContext(), getString(R.string.please_select_group), Toast.LENGTH_SHORT).show()
-
-            }
+                generateQrCode(group)
+            } ?: showToast(R.string.please_select_group)
         }
     }
 
     private fun generateQrCode(group: Group) {
         try {
             val qrCodeData = group.groupId
-
-            val hints = mutableMapOf<EncodeHintType, Any>()
-            hints[EncodeHintType.MARGIN] = 1
-
-            val qrCodeWriter = QRCodeWriter()
-            val bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 512, 512, hints)
-
-            val width = bitMatrix.width
-            val height = bitMatrix.height
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
-                }
-            }
-
+            val bitmap = createQrCodeBitmap(qrCodeData)
             binding.qrCodeImageView.setImageBitmap(bitmap)
-            Toast.makeText(requireContext(), getString(R.string.qr_code_generated, group.groupName), Toast.LENGTH_SHORT).show()
+            showToast(R.string.qr_code_generated, group.groupName)
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), getString(R.string.error_generating_qr_code), Toast.LENGTH_SHORT).show()
+            showToast(R.string.error_generating_qr_code)
         }
+    }
+
+    private fun createQrCodeBitmap(data: String): Bitmap {
+        val hints = mapOf(EncodeHintType.MARGIN to 1)
+        val qrCodeWriter = QRCodeWriter()
+        val bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 512, 512, hints)
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
+            }
+        }
+        return bitmap
+    }
+
+    private fun showToast(messageResId: Int, vararg formatArgs: Any) {
+        Toast.makeText(requireContext(), getString(messageResId, *formatArgs), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
