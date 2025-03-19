@@ -17,6 +17,7 @@ import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GroupDetailFragment : Fragment() {
@@ -25,6 +26,8 @@ class GroupDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private val groupDetailViewModel: GroupDetailViewModel by viewModels()
     private lateinit var userAdapter: UserAdapter
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -59,8 +62,7 @@ class GroupDetailFragment : Fragment() {
     private fun updateUI(group: Group) {
         binding.groupName.text = group.groupName
         userAdapter.updateUsers(group.users)
-
-        val currentUser = group.users.find { it.userId == FirebaseAuth.getInstance().currentUser?.uid }
+        val currentUser = group.users.find { it.userId == firebaseAuth.currentUser?.uid }
         if (currentUser == null || group.users.size < 3) {
             disableRaffleButton(R.string.minimum_three_members)
             return

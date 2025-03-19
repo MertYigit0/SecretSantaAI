@@ -14,6 +14,7 @@ import com.mertyigit0.secretsantaai.viewmodels.DrawResultViewModel
 import com.airbnb.lottie.LottieAnimationView
 import com.mertyigit0.secretsantaai.R
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DrawResultFragment : Fragment() {
@@ -21,7 +22,9 @@ class DrawResultFragment : Fragment() {
     private var _binding: FragmentDrawResultBinding? = null
     private val binding get() = _binding!!
     private val drawResultViewModel: DrawResultViewModel by viewModels()
-    private val auth = FirebaseAuth.getInstance()
+
+    @Inject
+    lateinit var auth : FirebaseAuth
 
     private val handler = Handler()
 
@@ -44,9 +47,6 @@ class DrawResultFragment : Fragment() {
             // Lottie animasyonu başlat
             val lottieAnimationView: LottieAnimationView = binding.lottieAnimationView
             lottieAnimationView.playAnimation()
-
-
-
 
         // Çekiliş sonuçlarını çek
         drawResultViewModel.fetchDrawResult(userId, groupId)
