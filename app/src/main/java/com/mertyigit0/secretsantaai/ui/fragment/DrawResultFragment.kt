@@ -26,8 +26,6 @@ class DrawResultFragment : Fragment() {
     @Inject
     lateinit var auth : FirebaseAuth
 
-    private val handler = Handler()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,25 +40,28 @@ class DrawResultFragment : Fragment() {
         val groupId = arguments?.getString("groupId") ?: return
         val userId = auth.currentUser?.uid ?: return
 
-        // Butona tıklama olayını dinleyin
+        playAnimation()
+        fetchDrawResult(userId, groupId)
+    }
 
-            // Lottie animasyonu başlat
-            val lottieAnimationView: LottieAnimationView = binding.lottieAnimationView
-            lottieAnimationView.playAnimation()
+    private fun playAnimation() {
+        val lottieAnimationView: LottieAnimationView = binding.lottieAnimationView
+        lottieAnimationView.playAnimation()
+    }
 
-        // Çekiliş sonuçlarını çek
+    private fun fetchDrawResult(userId: String, groupId: String) {
         drawResultViewModel.fetchDrawResult(userId, groupId)
-
         drawResultViewModel.giftReceiver.observe(viewLifecycleOwner) { receiverName ->
-            // Çekiliş sonucunu göster
-            binding.giftReceiverTextView.text = receiverName ?: getString(R.string.no_match_found)
-
+            showDrawResult(receiverName)
         }
+    }
+
+    private fun showDrawResult(receiverName: String?) {
+        binding.giftReceiverTextView.text = receiverName ?: getString(R.string.no_match_found)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacksAndMessages(null) // Handler'ı temizle
         _binding = null
     }
 }

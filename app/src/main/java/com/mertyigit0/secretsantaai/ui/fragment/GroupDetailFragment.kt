@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +18,9 @@ import com.mertyigit0.secretsantaai.databinding.FragmentGroupDetailBinding
 import com.mertyigit0.secretsantaai.ui.adapter.UserAdapter
 import com.mertyigit0.secretsantaai.viewmodels.GroupDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -103,22 +107,23 @@ class GroupDetailFragment : Fragment() {
     }
 
     private fun performDraw(users: List<User>, groupId: String) {
-        val userIds = users.map { it.userId }
-        val shuffledUserIds = userIds.shuffled()
-        val drawResults = mutableMapOf<String, String>()
-        val usedRecipients = mutableSetOf<String>()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val userIds = users.map { it.userId }
+            val shuffledUserIds = userIds.shuffled()
+            val drawResults = mutableMapOf<String, String>()
+            val usedRecipients = mutableSetOf<String>()
 
-        userIds.forEachIndexed { i, giverId ->
-            var recipientId: String
-            do {
-                recipientId = shuffledUserIds[(i + 1) % userIds.size]
-            } while (usedRecipients.contains(recipientId) || recipientId == giverId)
+            userIds.forEachIndexed { i, giverId ->
+                var recipientId: String
+                do {
+                    recipientId = shuffledUserIds[(i + 1) % userIds.size]
+                } while (usedRecipients.contains(recipientId) || recipientId == giverId)
+                drawResults[giverId] = recipientId
+                usedRecipients.add(recipientId)
+            }
 
-            drawResults[giverId] = recipientId
-            usedRecipients.add(recipientId)
+            saveDrawResults(groupId, drawResults)
         }
-
-        saveDrawResults(groupId, drawResults)
     }
 
     private fun saveDrawResults(groupId: String, drawResults: Map<String, String>) {
@@ -126,7 +131,9 @@ class GroupDetailFragment : Fragment() {
             .document(groupId)
             .update("drawResults", drawResults)
             .addOnSuccessListener {
-                showDrawResult(groupId)
+                lifecycleScope.launch(Dispatchers.Main) {
+                    showDrawResult(groupId)
+                }
             }
     }
 
